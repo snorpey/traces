@@ -7,15 +7,19 @@ var Event = function()
 	var text;
 	var info;
 	
-	_self.init = function($position, $data)
+	_self.init = function($data)
 	{
-		
 		type = $data.type;
 		name = $data.name;
 		date = $data.date;
 		info = $data.info;
 		
-		colsole.log($name);
+		//console.log(_self.getDate().format('ss'));
+	}
+	
+	_self.getDate = function()
+	{
+		return date;
 	}
 	
 	function typeValid($type)

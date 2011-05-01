@@ -35,11 +35,5 @@ h1
 
 #graph
 {
-
-}
-
-#graph rect
-{
-	fill: #06F;
-	stroke: #fff;
+	background: #ffffff;
 }

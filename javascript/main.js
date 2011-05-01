@@ -29,9 +29,9 @@ $(document).ready(
 		
 		function init()
 		{		
-			$('body').prepend('<svg id="graph" xmlns="http://www.w3.org/2000/svg"></svg>');
+			$('body').prepend('<canvas id="canvas" width="960" height="450">sorry but your browser doesn\'t support the canvas tag.</canvas>');
 			
-			$('#graph').css(
+			$('#canvas').css(
 				{
 					position: 'absolute',
 				 	top: 0,
@@ -46,7 +46,7 @@ $(document).ready(
 		
 		function resized()
 		{
-			$('#graph').css(
+			$('#canvas').attr(
 				{
 					width: $(window).width(),
 					height: $(window).height()
@@ -54,7 +54,6 @@ $(document).ready(
 			);
 			
 			graph.setScreenSize({width: $(window).width(), height: $(window).height()});
-			graph.reDraw();
 		}
 	}
 );
