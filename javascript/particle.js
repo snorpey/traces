@@ -8,12 +8,15 @@ var Particle = function()
 	var lifespan = 1100;
 	var death_rate = 1;
 	var has_lifespan = true;
+	var index;
 	
-	_self.init = function($position)
+	_self.init = function($data)
 	{
-		position = Vector.create([$position.x, $position.y, 0]);
+		position = Vector.create([$data.x, $data.y, 0]);
 		velocity = Vector.create([0, 0, 0]);
 		acceleration = Vector.create([0, 0, 0]);
+		index = $data.index;
+		console.log(index);
 	}
 	
 	//	update particle values

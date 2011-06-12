@@ -7,6 +7,8 @@ var Graph = function()
 	var particles = [];
 	var screen = {width: 800, height: 600};
 	
+	var data_types = ['code', 'music', 'text', 'game', 'location', 'photo'];
+	
 	_self.init = function()
 	{
 		ctx = document.getElementById('canvas').getContext('2d');
@@ -29,9 +31,15 @@ var Graph = function()
 		draw();
 	}
 	
+	_self.getParticleCount = function()
+	{
+		return particles.length;
+	}
+	
 	function update()
 	{
-
+		// set particle position
+		// this is where the cool shit is supposed to happen. (I guess)
 		for(var i = 0; i < events.length; i++)
 		{
 			//var target_x = mapRange(events[i].getDate().format('ss'), 60, 0, 50, screen.width - 200);
@@ -47,6 +55,9 @@ var Graph = function()
 			particles[i].addDampening(0.8);
 			particles[i].update();
 		}
+		
+		//	merge event and particle classes into one class
+		// 	also, do not use functional apporach anymore
 		
 		/*
 		//	sort particles by current x position
@@ -103,18 +114,19 @@ var Graph = function()
 	{
 		if(events.length < $datasets)
 		{			
-			var position = {};
-			position = {};
-			position.x = Math.round(Math.random() * screen.width);
-			position.y = Math.round(Math.random() * screen.height);
+			var particle = {};
+			particle = {};
+			particle.x = Math.round(Math.random() * screen.width);
+			particle.y = Math.round(Math.random() * screen.height);
+			particle.index = events.length;
 			
-			var data = {}
-			data.name = 'Event ' + events.length;
-			data.type = 'code';
-			data.date = new Date();			
-			data.info = {};
+			var event = {}
+			event.name = 'Event ' + events.length;
+			event.type = data_types[randomFromTo(0, data_types.length - 1)];
+			event.date = new Date();			
+			event.info = {};
 			
-			eventAdd(position, data);
+			eventAdd(particle, event);
 			timer(function(){eventsGenerate($datasets);});
 		}
 	}
@@ -125,7 +137,7 @@ var Graph = function()
 	}
 	
 	//	create a new event and corresponding particle
-	//	$particle: {x, y}
+	//	$particle: {x, y, index}
 	//	$event:{name, type, date, info}
 	function eventAdd($particle, $event)
 	{
@@ -139,9 +151,14 @@ var Graph = function()
 		//console.log(particles[index].getPosition())
 	}
 	
-	//	processing map function
+	//	processing.org map function
 	function mapRange(value, low_1, high_1, low_2, high_2)
 	{
     	return low_2 + (high_2 - low_2) * (value - low_1) / (high_1 - low_1);
 	}
+	
+	function randomFromTo(from, to)
+	{
+		return Math.floor(Math.random() * (to - from + 1) + from);
+	};
 }

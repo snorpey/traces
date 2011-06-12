@@ -15,12 +15,6 @@ $(document).ready(
 			delicious
 		*/
 		
-		// frameworks:
-		/*
-			d3.js for graphs
-			isotope for layout
-		*/
-		
 		var graph = new Graph();
 		
 		$(window).resize(resized);
@@ -29,16 +23,8 @@ $(document).ready(
 		
 		function init()
 		{		
-			$('body').prepend('<canvas id="canvas" width="960" height="450">sorry but your browser doesn\'t support the canvas tag.</canvas>');
-			
-			$('#canvas').css(
-				{
-					position: 'absolute',
-				 	top: 0,
-				 	left: 0,
-			 		zIndex: 1
-				}
-			);
+			$('body').prepend('<canvas id="canvas" width="960" height="450">sorry but your browser doesn\'t support the canvas element.</canvas>');
+			$('#canvas').css({position: 'absolute',	top: 0,	left: 0, zIndex: 1});
 			
 			graph.init();
 			resized();
@@ -46,12 +32,7 @@ $(document).ready(
 		
 		function resized()
 		{
-			$('#canvas').attr(
-				{
-					width: $(window).width(),
-					height: $(window).height()
-				}
-			);
+			$('#canvas').attr({width: $(window).width(), height: $(window).height()});
 			
 			graph.setScreenSize({width: $(window).width(), height: $(window).height()});
 		}
