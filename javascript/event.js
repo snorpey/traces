@@ -1,4 +1,4 @@
-var Event = function()
+var Event = function( $data )
 {
 	var _self = this;
 	var type;
@@ -7,19 +7,24 @@ var Event = function()
 	var text;
 	var info;
 	
-	_self.init = function($data)
+	(function(){ init( $data ); })()
+	
+	function init( $data )
 	{
 		type = $data.type;
 		name = $data.name;
 		date = $data.date;
 		info = $data.info;
-		
-		//console.log(_self.getDate().format('ss'));
 	}
 	
 	_self.getDate = function()
 	{
 		return date;
+	}
+	
+	_self.getType = function()
+	{
+		return type;
 	}
 	
 	function typeValid($type)

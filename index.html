@@ -8,7 +8,25 @@
 		<div id="text">
 			<h1>personal stats</h1>
 			<p>this is an overview of traces i left in the internet.</p>
-			<nav>show all events / music / games / as a graph / pie chart / on a map / numbers ordered by date / type</nav>
+			<nav>
+				show
+				<span>
+					<a href="#filter-all">all events</a> / 
+					<a href="#filter-music">music</a> / 
+					<a href="#filter-game">games</a> / 
+					<a href="#filter-location">checkins</a> / 
+					<a href="#filter-photo">photos</a>
+				</span> 
+				on a
+				<span> 
+					<a href="#display-timeline">timeline</a> /
+					<a href="#display-graph">graph</a> / 
+					<a href="#display-piechart">pie chart</a> / 
+					<a href="#display-map">map</a> / 
+					<a href="#display-timeline">numbers</a>
+				</span>
+				ordered by <span>date / type</span>
+			</nav>
 		</div>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.js"></script>
 		<script src="javascript/sylvester-0.1.3.js"></script>
@@ -17,6 +35,7 @@
 		<script src="javascript/graph.js"></script>
 		<script src="javascript/particle.js"></script>
 		<script src="javascript/event.js"></script>
+		<script src="javascript/generator.js"></script>
 		<script src="javascript/main.js"></script>
 	</body>
 </html>
