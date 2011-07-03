@@ -37,3 +37,28 @@ h1
 {
 	background: #ffffff;
 }
+
+a
+{
+	color: #999;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+a:hover
+{
+	color: #333;
+}
+
+a.active
+{
+	
+	color: #06F;
+}
+
+a.active:hover
+{
+	text-decoration: none;
+	color: #06F;
+	cursor: default;
+}

@@ -6,6 +6,7 @@ var Graph = function()
 	var events = [];
 	var particles = [];
 	var screen = {width: 800, height: 600};
+	var generator;
 	
 	var data_types = ['code', 'music', 'text', 'game', 'location', 'photo'];
 	
@@ -22,6 +23,22 @@ var Graph = function()
 	_self.setScreenSize = function($screen)
 	{
 		screen = $screen;
+	}
+	
+	_self.navigate = function( $nav )
+	{
+		//console.log( $nav );
+		
+		var action = $nav.split('-')[0];
+		var value = $nav.split('-')[1];
+				
+		if(
+			action === 'filter' && 
+			value !== undefined
+		)
+		{
+			filterEvents( value );
+		}
 	}
 	
 	_self.run = function()
@@ -47,7 +64,7 @@ var Graph = function()
 			var target_x = mapRange(i, events.length, 0, 50, screen.width - 50);
 			var target_y = screen.height - 50;
 			
-			particles[i].applyAttractionForce(Vector.create([target_x, target_y, 0]), -1, 0.01);
+			particles[i].applyAttractionForce( Vector.create( [target_x, target_y, 0] ), -1, 0.01 );
 		}
 		
 		for(var i = 0; i < particles.length; i++)
@@ -88,7 +105,7 @@ var Graph = function()
 	function draw()
 	{
 		//clear background
-		ctx.fillStyle = 'rgba(255, 255, 255, 1)';
+		ctx.fillStyle = 'rgba(255, 255, 255, 0.79)';
 		ctx.fillRect(0, 0, screen.width, screen.height);
 		
 		//draw particles
@@ -96,69 +113,97 @@ var Graph = function()
 
 		while(i--)
 		{
-			var px = ~~ (particles[i].getPosition().x + 0.5);
-			var py = ~~ (particles[i].getPosition().y + 0.5);
-
-			ctx.fillStyle = 'rgba(0, 0, 0, 1 )';
-			ctx.beginPath();
-			ctx.arc(px, py, 1.5, 0, Math.PI * 2, true);
-			ctx.closePath();
-			ctx.fill();
+			if( particles[i].getColor().a !== 0 )
+			{
+				var px = ~~ ( particles[i].getPosition().x + 0.5 );
+				var py = ~~ ( particles[i].getPosition().y + 0.5 );
+	
+				ctx.fillStyle = particles[i].getColor( true );
+				ctx.beginPath();
+				ctx.arc( px, py, 1.5, 0, Math.PI * 2, true );
+				ctx.closePath();
+				ctx.fill();
+			}
 		}
 	}
 	
-	//	data generation function.
+	//	data generation.
 	//	eventually to be replaced with
 	//	a callback for an AJAX call in main
 	function eventsGenerate($datasets)
 	{
+		if(generator === undefined)
+		{
+			generator = new Generator();
+		}
+		
 		if(events.length < $datasets)
 		{			
-			var particle = {};
-			particle = {};
-			particle.x = Math.round(Math.random() * screen.width);
-			particle.y = Math.round(Math.random() * screen.height);
-			particle.index = events.length;
+			events.push( generator.generateRandom() );
 			
-			var event = {}
-			event.name = 'Event ' + events.length;
-			event.type = data_types[randomFromTo(0, data_types.length - 1)];
-			event.date = new Date();			
-			event.info = {};
-			
-			eventAdd(particle, event);
-			timer(function(){eventsGenerate($datasets);});
+			particleAdd( event );
+			timer( function(){ eventsGenerate( $datasets ); } );
 		}
 	}
 	
-	function timer($callback)
+	function timer( $callback, $max )
 	{
-		setTimeout($callback, Math.random() * 500);
+		if(!$max)
+		{
+			$max = 500;
+		}
+		
+		setTimeout( $callback, Math.random() * $max );
 	}
 	
-	//	create a new event and corresponding particle
-	//	$particle: {x, y, index}
+	//	create a new particle, corresponding to an event
 	//	$event:{name, type, date, info}
-	function eventAdd($particle, $event)
+	// ! gf: this ain't good. change!
+	function particleAdd( $event )
 	{
-		var index = events.length;
+		var index = events.length - 1;
+		
+		var particle = {};
+			particle.x = Math.round( Math.random() * screen.width );
+			particle.y = Math.round( Math.random() * screen.height );
+			particle.index = events.length;
 		
 		particles[index] = new Particle();
-		particles[index].init($particle);
-		events[index] = new Event();
-		events[index].init($event);
-		
-		//console.log(particles[index].getPosition())
+		particles[index].init( particle );
 	}
 	
+	function filterEvents( $type )
+	{
+		for(var i = 0; i < events.length; i++)
+		{
+			if($type === 'all')
+			{
+				particles[i].setVisibility( true );
+			}
+			
+			else
+			{				
+				if(events[i].getType() === $type)
+				{
+					particles[i].setVisibility( true );
+				}
+				
+				else
+				{
+					particles[i].setVisibility( false );
+				}
+			}
+		}
+	}
+
 	//	processing.org map function
-	function mapRange(value, low_1, high_1, low_2, high_2)
+	function mapRange( $value, $low1, $high1, $low2, $high2 )
 	{
-    	return low_2 + (high_2 - low_2) * (value - low_1) / (high_1 - low_1);
+		return $low2 + ( $high2 - $low2 ) * ( $value - $low1) / ( $high1 - $low1 );
 	}
 	
-	function randomFromTo(from, to)
+	function randomFromTo( $from, $to )
 	{
-		return Math.floor(Math.random() * (to - from + 1) + from);
+		return Math.floor( Math.random() * ( $to - $from + 1 ) + $from );
 	};
 }
