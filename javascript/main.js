@@ -15,7 +15,10 @@ $(document).ready(
 			delicious
 		*/
 		
+		
+		var intro = new Intro();
 		var graph = new Graph();
+		var navigation = new Navigation();
 		
 		$( window ).resize( resized );
 		$( 'nav a' ).click( navigated );
@@ -28,8 +31,15 @@ $(document).ready(
 			$( 'nav span a:first-child' ).addClass( 'active' );
 			$( '#canvas' ).css( { position: 'absolute', top: 0, left: 0, zIndex: 2 } );
 			
-			graph.init();
 			resized();
+			dispatch();
+			intro.init();			
+		}
+		
+		function dispatch()
+		{
+			intro.animation_done.add( graph.init );
+			intro.animation_done.add( navigation.init );
 		}
 		
 		function navigated( $event )

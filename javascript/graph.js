@@ -7,6 +7,9 @@ var Graph = function()
 	var particles = [];
 	var screen = {width: 800, height: 600};
 	var generator;
+	var filter = 'all';
+	var display = 'timeline';
+	var timeline;
 	
 	var data_types = ['code', 'music', 'text', 'game', 'location', 'photo'];
 	
@@ -61,8 +64,8 @@ var Graph = function()
 		{
 			//var target_x = mapRange(events[i].getDate().format('ss'), 60, 0, 50, screen.width - 200);
 			
-			var target_x = mapRange(i, events.length, 0, 50, screen.width - 50);
-			var target_y = screen.height - 50;
+			var target_x = mapRange(i, 0, events.length, 50, screen.width - 50);
+			var target_y = screen.height / 2;
 			
 			particles[i].applyAttractionForce( Vector.create( [target_x, target_y, 0] ), -1, 0.01 );
 		}
@@ -105,8 +108,10 @@ var Graph = function()
 	function draw()
 	{
 		//clear background
-		ctx.fillStyle = 'rgba(255, 255, 255, 0.79)';
-		ctx.fillRect(0, 0, screen.width, screen.height);
+		//ctx.fillStyle = 'rgba(255, 255, 255, 0.79)';
+		//ctx.fillRect(0, 0, screen.width, screen.height);
+		
+		ctx.clearRect(0, 0, screen.width, screen.height);
 		
 		//draw particles
 		var i = particles.length;
@@ -142,7 +147,7 @@ var Graph = function()
 			events.push( generator.generateRandom() );
 			
 			particleAdd( event );
-			timer( function(){ eventsGenerate( $datasets ); } );
+			timer( function(){ eventsGenerate( $datasets ); filterEvents( filter ); } );
 		}
 	}
 	
@@ -150,7 +155,7 @@ var Graph = function()
 	{
 		if(!$max)
 		{
-			$max = 500;
+			$max = 100;
 		}
 		
 		setTimeout( $callback, Math.random() * $max );
@@ -194,6 +199,8 @@ var Graph = function()
 				}
 			}
 		}
+		
+		filter = $type;
 	}
 
 	//	processing.org map function
