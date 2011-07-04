@@ -30,7 +30,7 @@ var Event = function( $data )
 	function typeValid($type)
 	{
 		var types = ['music', 'game', 'code', 'location', 'photo'];
-		var return_value = types.join().indexOf($type);
+		var return_value = types.join().indexOf( $type );
 		
 		if(return_value != -1)
 		{
