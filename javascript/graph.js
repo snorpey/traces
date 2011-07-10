@@ -10,14 +10,17 @@ var Graph = function()
 	var filter = 'all';
 	var display = 'timeline';
 	var timeline;
+	var symbols;
 	
 	var data_types = ['code', 'music', 'text', 'game', 'location', 'photo'];
 	
 	_self.init = function()
 	{
 		ctx = document.getElementById('canvas').getContext('2d');
-
-		eventsGenerate(50);	
+		
+		symbols = new Symbols( particles );
+		
+		eventsGenerate(100);	
 		_self.run();
 	}
 	
@@ -60,14 +63,37 @@ var Graph = function()
 	{
 		// set particle position
 		// this is where the cool shit is supposed to happen. (I guess)
+		
+		var targets = [];
+		
+		if( symbols.getActive() )
+		{
+			targets = symbols.getPositions();
+			
+			// display the path in the center.
+			// resize a path to 50% height
+		}
+		
 		for(var i = 0; i < events.length; i++)
 		{
-			//var target_x = mapRange(events[i].getDate().format('ss'), 60, 0, 50, screen.width - 200);
+			var target = {};
 			
-			var target_x = mapRange(i, 0, events.length, 50, screen.width - 50);
-			var target_y = screen.height / 2;
+			if( targets.length > 0 )
+			{
+				target = targets[i];
+				
+				//target.x = mapRange(i, 0, events.length, 50, screen.width - 50);
+				//target.y = screen.height / 2;
+			}
 			
-			particles[i].applyAttractionForce( Vector.create( [target_x, target_y, 0] ), -1, 0.01 );
+			else
+			{
+				//var target.x = mapRange(events[i].getDate().format('ss'), 60, 0, 50, screen.width - 200);
+				target.x = mapRange(i, 0, events.length, 50, screen.width - 50);
+				target.y = screen.height / 2;
+			}
+			
+			particles[i].applyAttractionForce( Vector.create( [target.x, target.y, 0] ), -1, 0.01 );
 		}
 		
 		for(var i = 0; i < particles.length; i++)
@@ -137,18 +163,34 @@ var Graph = function()
 	//	a callback for an AJAX call in main
 	function eventsGenerate($datasets)
 	{
-		if(generator === undefined)
+		if( generator === undefined )
 		{
 			generator = new Generator();
 		}
 		
-		if(events.length < $datasets)
+		if( events.length < $datasets )
 		{			
 			events.push( generator.generateRandom() );
 			
 			particleAdd( event );
 			timer( function(){ eventsGenerate( $datasets ); filterEvents( filter ); } );
 		}
+	}
+	
+	_self.navigation_over = function( $event )
+	{		
+		for( var i = 0; i < data_types.length; i++ )
+		{
+			if( $( $event.target ).attr('href').replace('#filter-', '') === data_types[i] )
+			{
+				symbols.setSymbol( data_types[i] );
+			}
+		}	
+	}
+	
+	_self.navigation_out = function( $event )
+	{
+		symbols.setInactive();
 	}
 	
 	function timer( $callback, $max )
@@ -175,7 +217,12 @@ var Graph = function()
 		
 		particles[index] = new Particle();
 		particles[index].init( particle );
-	}
+		
+		if( symbols.active )
+		{
+			symbols.particlesUpdate( particles );
+		}
+	}	
 	
 	function filterEvents( $type )
 	{
