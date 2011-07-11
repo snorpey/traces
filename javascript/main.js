@@ -15,6 +15,7 @@ $(document).ready(
 			delicious
 		*/
 		
+		var title = new Title();
 		var intro = new Intro();
 		var graph = new Graph();
 		var navigation = new Navigation();
@@ -39,15 +40,19 @@ $(document).ready(
 			
 			resized();
 			dispatch();
-			intro.init();			
+			
+			title.init();			
 		}
 		
 		function dispatch()
 		{
+			title.animation_done.add( intro.init );
 			intro.animation_done.add( graph.init );
 			intro.animation_done.add( navigation.init );
-			navigation_over.add( graph.navigation_over );
-			navigation_out.add( graph.navigation_out );
+			navigation_over.add( graph.navigationOver );
+			navigation_over.add( navigation.navigationOver );
+			navigation_out.add( graph.navigationOut );
+			navigation_out.add( navigation.navigationOut );
 		}
 		
 		function navigated( $event )

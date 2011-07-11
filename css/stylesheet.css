@@ -21,18 +21,44 @@ body
 
 h1
 {
-	font-size: 12px;
+	font-size: 15px;
 	margin-bottom: 12px;
 	color: rgba(255, 255, 255, 0.9);
 	float: left;
 	clear: both;
-	padding: 2px 5px;
-	text-shadow: white 0 0 25px;
-	font-weight: normal;	
-	background-image: url(../images/loading.png);
-	background-repeat: no-repeat;
-	background-position: -120px 0;
+	font-weight: normal;
+	display: none;
+	overflow: hidden;
+	height: 22px;
+	overflow: hidden;
 }
+
+	h1 span
+	{
+		height: 22px;
+		padding: 0 4px;
+		background: #000;
+		color: #fff;
+		margin-right: 1px;
+		margin-top: -22px;
+		line-height: 22px;
+		display: block;
+		float: left;
+		
+		-webkit-transition: all 0.2s ease-in;
+		transition: all 0.2s ease-in;
+
+	}
+	
+	h1 span.active
+	{
+		margin-top: 0;
+	}
+	
+	h1 span:hover
+	{
+		margin-top: 5px;
+	}
 
 #text
 {

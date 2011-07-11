@@ -1,4 +1,4 @@
-var Intro = function( )
+var Intro = function()
 {
 	var _self = this;
 	var text = [];
@@ -19,21 +19,8 @@ var Intro = function( )
 				$( this ).text('');
 			}
 		);
-				
-		setTimeout( 
-			function()
-			{ 
-				$( 'h1' ).animate( 
-					{ backgroundPosition: '0 0' }, 
-					700, 
-					function()
-					{
-						textWrite( 0, 0, text );
-					}
-				);
-			},
-			1000
-		);	
+			
+		textWrite( 0, 0, text );	
 	}
 	
 	function textWrite( $paragraph, $character, $text )
