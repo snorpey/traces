@@ -177,7 +177,7 @@ var Graph = function()
 		}
 	}
 	
-	_self.navigation_over = function( $event )
+	_self.navigationOver = function( $event )
 	{		
 		for( var i = 0; i < data_types.length; i++ )
 		{
@@ -188,7 +188,7 @@ var Graph = function()
 		}	
 	}
 	
-	_self.navigation_out = function( $event )
+	_self.navigationOut = function( $event )
 	{
 		symbols.setInactive();
 	}
