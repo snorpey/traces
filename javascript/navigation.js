@@ -9,6 +9,7 @@ var Navigation = function( )
 	_self.init = function()
 	{		
 		$( 'nav .specific' ).hide();
+		$( 'nav a:first' ).addClass( 'active' );
 		$( 'nav' ).fadeIn(400);
 	}
 	
@@ -17,6 +18,11 @@ var Navigation = function( )
 		var type = $( event.target )
 						.attr( 'href' )
 						.replace( '#filter-', '' );
+		
+		if( type.indexOf( 'orderby' ) > -1)
+		{
+			type = 'all';
+		}
 		
 		showSpecificOptions( type );
 	}

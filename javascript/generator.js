@@ -57,7 +57,7 @@ var Generator = function()
 	{
 		if ( !$from )
 		{
-		    $from = new Date(1900, 0, 1).getTime();
+		    $from = new Date( 1900, 0, 1 ).getTime();
 		}
 		
 		else
@@ -75,7 +75,11 @@ var Generator = function()
 			$to = $to.getTime();
 		}
 		
-		return new Date( $from + Math.random() * ($to - $from) );
+		var date = new Date( $from + Math.random() * ($to - $from) );
+		
+		//console.log( Math.round( date.getTime() / 1000 ) );
+		
+		return date;
 	}
 	
 	function randomNumber( $min, $max, $digits )

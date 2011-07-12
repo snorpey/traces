@@ -31,16 +31,14 @@ var Title = function( )
 	}
 	
 	function characterAnimateIn( $element, $text, $index )
-	{
-		console.log( $index );
-		
+	{		
 		if( $index < $text.length - 1 )
 		{
 			$element
 				.find( 'span:eq(' + $index + ')' )
 				.addClass( 'active' )
 				
-			setTimeout( function() { characterAnimateIn( $element, $text, parseInt( $index + 1 ) ); }, 100 );
+			setTimeout( function() { characterAnimateIn( $element, $text, parseInt( $index + 1 ) ); }, 70 );
 		}
 		
 		else

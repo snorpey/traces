@@ -5,10 +5,11 @@ var Graph = function()
 	var ctx;
 	var events = [];
 	var particles = [];
-	var screen = {width: 800, height: 600};
+	var screen = { width: 800, height: 600 };
 	var generator;
 	var filter = 'all';
-	var display = 'timeline';
+	var display = 'line';
+	
 	var timeline;
 	var symbols;
 	
@@ -19,6 +20,7 @@ var Graph = function()
 		ctx = document.getElementById('canvas').getContext('2d');
 		
 		symbols = new Symbols( particles );
+		timeline = new Timeline( particles, events );
 		
 		eventsGenerate(100);	
 		_self.run();
@@ -26,9 +28,14 @@ var Graph = function()
 	
 	//	set screen size.
 	//	called every time the window size changes
-	_self.setScreenSize = function($screen)
+	_self.setScreenSize = function( $screen )
 	{
 		screen = $screen;
+		
+		if( timeline )
+		{
+			timeline.screenUpdate( screen );
+		}
 	}
 	
 	_self.navigate = function( $nav )
@@ -44,6 +51,14 @@ var Graph = function()
 		)
 		{
 			filterEvents( value );
+		}
+		
+		if(
+			action === 'orderby' && 
+			value !== undefined
+		)
+		{
+			orderEventsBy( value );
 		}
 	}
 	
@@ -65,16 +80,18 @@ var Graph = function()
 		// this is where the cool shit is supposed to happen. (I guess)
 		
 		var targets = [];
+				
+		if( timeline.getActive() )
+		{
+			targets = timeline.getPositions();
+		}
 		
 		if( symbols.getActive() )
 		{
 			targets = symbols.getPositions();
-			
-			// display the path in the center.
-			// resize a path to 50% height
 		}
 		
-		for(var i = 0; i < events.length; i++)
+		for( var i = 0; i < events.length; i++ )
 		{
 			var target = {};
 			
@@ -222,6 +239,14 @@ var Graph = function()
 		{
 			symbols.particlesUpdate( particles );
 		}
+		
+		if( timeline.active )
+		{
+			timeline.particlesUpdate( particles );
+			timeline.eventsUpdate( events );			
+		}
+		
+		timeline.screenUpdate( screen );
 	}	
 	
 	function filterEvents( $type )
@@ -248,6 +273,21 @@ var Graph = function()
 		}
 		
 		filter = $type;
+	}
+	
+	function orderEventsBy( $key )
+	{
+		if( $key === 'date' )
+		{
+			display = 'timeline';
+			timeline.setActive();
+			console.log( display );
+		}
+		
+		else
+		{
+			timeline.setInactive();
+		}
 	}
 
 	//	processing.org map function
