@@ -35,7 +35,7 @@ $(document).ready(
 		function init()
 		{		
 			$( 'body' ).prepend('<canvas id="canvas" width="960" height="450">sorry but your browser doesn\'t support the canvas element.</canvas>');
-			$( 'nav span a:first-child' ).addClass( 'active' );
+			
 			$( '#canvas' ).css( { position: 'absolute', top: 0, left: 0, zIndex: 2 } );
 			
 			resized();
