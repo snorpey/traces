@@ -11,6 +11,7 @@ var Graph = function()
 	var display = 'line';
 	
 	var timeline;
+	var clock;
 	var symbols;
 	
 	var data_types = ['code', 'music', 'text', 'game', 'location', 'photo'];
@@ -21,6 +22,7 @@ var Graph = function()
 		
 		symbols = new Symbols( particles );
 		timeline = new Timeline( particles, events );
+		clock = new Clock( particles, events );
 		
 		eventsGenerate(100);	
 		_self.run();
@@ -35,6 +37,11 @@ var Graph = function()
 		if( timeline )
 		{
 			timeline.screenUpdate( screen );
+		}
+		
+		if( clock )
+		{
+			clock.screenUpdate( screen );
 		}
 	}
 	
@@ -84,6 +91,11 @@ var Graph = function()
 		if( timeline.getActive() )
 		{
 			targets = timeline.getPositions();
+		}
+		
+		if( clock.getActive() )
+		{
+			targets = clock.getPositions();
 		}
 		
 		if( symbols.getActive() )
@@ -246,7 +258,14 @@ var Graph = function()
 			timeline.eventsUpdate( events );			
 		}
 		
+		if( clock.active )
+		{
+			clock.particlesUpdate( particles );
+			clock.eventsUpdate( events );			
+		}
+		
 		timeline.screenUpdate( screen );
+		clock.screenUpdate( screen );
 	}	
 	
 	function filterEvents( $type )
@@ -277,16 +296,23 @@ var Graph = function()
 	
 	function orderEventsBy( $key )
 	{
-		if( $key === 'date' )
-		{
-			display = 'timeline';
-			timeline.setActive();
-			console.log( display );
-		}
+		var keys = [
+			{ key: 'date',	object: timeline	},
+			{ key: 'time',	object: clock		}
+		]
 		
-		else
+		for( var i = 0; i < keys.length; i++ )
 		{
-			timeline.setInactive();
+			if( keys[i].key === $key )
+			{
+				//display = 'keys[i].key';
+				keys[i].object.setActive();
+			}
+			
+			else
+			{
+				keys[i].object.setInactive();
+			}
 		}
 	}
 
