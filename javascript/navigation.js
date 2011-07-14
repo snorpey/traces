@@ -21,7 +21,9 @@ var Navigation = function( )
 		
 		if( type.indexOf( 'orderby' ) > -1)
 		{
-			type = 'all';
+			type = $( 'span:first .active' )
+						.attr( 'href' )
+						.replace( '#filter-', '' );
 		}
 		
 		showSpecificOptions( type );
@@ -29,7 +31,11 @@ var Navigation = function( )
 	
 	_self.navigationOut = function( $event )
 	{
-		showSpecificOptions( 'all' );
+		var type = $( 'span:first .active' )
+						.attr( 'href' )
+						.replace( '#filter-', '' );
+		
+		showSpecificOptions( type );
 	}
 	
 	function showSpecificOptions( $type )

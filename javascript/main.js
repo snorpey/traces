@@ -22,8 +22,7 @@ $(document).ready(
 
 		var Signal = signals.Signal;
 		var navigation_over = new Signal();
-		var navigation_out = new Signal
-		
+		var navigation_out = new Signal();
 		
 		$( window ).resize( resized );
 		$( 'nav a' )

@@ -12,6 +12,7 @@ var Graph = function()
 	
 	var timeline;
 	var clock;
+	var map;
 	var symbols;
 	
 	var data_types = ['code', 'music', 'text', 'game', 'location', 'photo'];
@@ -23,6 +24,7 @@ var Graph = function()
 		symbols = new Symbols( particles );
 		timeline = new Timeline( particles, events );
 		clock = new Clock( particles, events );
+		map = new Map( particles, events );
 		
 		eventsGenerate(100);	
 		_self.run();
@@ -47,7 +49,7 @@ var Graph = function()
 	
 	_self.navigate = function( $nav )
 	{
-		//console.log( $nav );
+		console.log( $nav );
 		
 		var action = $nav.split('-')[0];
 		var value = $nav.split('-')[1];
@@ -96,6 +98,11 @@ var Graph = function()
 		if( clock.getActive() )
 		{
 			targets = clock.getPositions();
+		}
+		
+		if( map.getActive() )
+		{
+			targets = map.getPositions();
 		}
 		
 		if( symbols.getActive() )
@@ -168,6 +175,21 @@ var Graph = function()
 		
 		ctx.clearRect(0, 0, screen.width, screen.height);
 		
+		if( map.getActive() )
+		{
+			var image = new Image();
+            	image.src = 'images/world-map.png';
+                     
+			try
+			{
+				ctx.globalAlpha = 0.1;
+				ctx.drawImage( image, 0, 0, screen.width, screen.height );
+				ctx.globalAlpha = 1;
+			}
+			
+			catch(err){}
+		}		
+		
 		//draw particles
 		var i = particles.length;
 
@@ -185,6 +207,8 @@ var Graph = function()
 				ctx.fill();
 			}
 		}
+		
+		
 	}
 	
 	//	data generation.
@@ -247,25 +271,32 @@ var Graph = function()
 		particles[index] = new Particle();
 		particles[index].init( particle );
 		
-		if( symbols.active )
+		if( symbols.getActive() )
 		{
 			symbols.particlesUpdate( particles );
 		}
 		
-		if( timeline.active )
+		if( timeline.getActive() )
 		{
 			timeline.particlesUpdate( particles );
 			timeline.eventsUpdate( events );			
 		}
 		
-		if( clock.active )
+		if( clock.getActive() )
 		{
 			clock.particlesUpdate( particles );
 			clock.eventsUpdate( events );			
 		}
 		
+		if( map.getActive() )
+		{
+			map.particlesUpdate( particles );
+			map.eventsUpdate( events );			
+		}
+		
 		timeline.screenUpdate( screen );
 		clock.screenUpdate( screen );
+		map.screenUpdate( screen );
 	}	
 	
 	function filterEvents( $type )
@@ -295,10 +326,11 @@ var Graph = function()
 	}
 	
 	function orderEventsBy( $key )
-	{
+	{		
 		var keys = [
-			{ key: 'date',	object: timeline	},
-			{ key: 'time',	object: clock		}
+			{ key: 'date',		object: timeline	},
+			{ key: 'time',		object: clock		},
+			{ key: 'location',	object: map			}
 		]
 		
 		for( var i = 0; i < keys.length; i++ )

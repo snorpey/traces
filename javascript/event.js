@@ -6,6 +6,7 @@ var Event = function( $data )
 	var name;
 	var text;
 	var info;
+	var location;
 	
 	(function(){ init( $data ); })()
 	
@@ -15,6 +16,16 @@ var Event = function( $data )
 		name = $data.name;
 		date = $data.date;
 		info = $data.info;
+		
+		if( $data.location !== undefined )
+		{
+			location = $data.location;
+			
+			_self.getLocation = function()
+			{
+				return location;
+			}
+		}
 	}
 	
 	_self.getDate = function()
@@ -25,6 +36,18 @@ var Event = function( $data )
 	_self.getType = function()
 	{
 		return type;
+	}
+	
+	_self.hasLocation = function()
+	{
+		var return_value = false;
+		
+		if( location !== undefined )
+		{
+			return_value = true;
+		}
+		
+		return return_value;
 	}
 	
 	function typeValid($type)
