@@ -81,24 +81,7 @@ var Clock = function( $particles, $events )
 	
 	// 	THANKS newblack!
 	// 	http://board.flashkit.com/board/showpost.php?s=5df1c00cfb0e5d2d4544997a59cf64d1&p=4079955&postcount=2
-	//	(i hate this trigonomeztry...)
-	/*
-	function getPositionsOnCircle( $center, $radius, $point_count )
-	{
-		var alpha = Math.PI * 2 / $point_count;
-		var points = [];
-		var i = -1;
-		
-		while( ++i < $point_count )
-		{
-			var theta = alpha * i;
-			var point_on_circle = { x: Math.cos( theta ) * $radius, y: Math.sin( theta ) * $radius };
-			
-			points[i] = { x: parseInt( center.x + point_on_circle.x ), y: parseInt( center.y + point_on_circle.y ) };
-		}
-		
-		return points;
-	}*/
+	//	(i hate trigonometry and have no idea what's going on here. but it works...)
 	
 	function getPositionOnCircle( $index, $center, $radius, $point_count )
 	{
