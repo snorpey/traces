@@ -1,82 +1,74 @@
 $(document).ready(
 	function()
-	{
-		// data sources
-		/*
-			flickr
-			twitter
-			foursquare
-			steam
-			psn
-			last.fm
-			gowalla
-			stack overflow
-			github
-			delicious
-		*/
+	{		
+		var Signal = signals.Signal;
 		
+		//	interface
+		var navigation = new Navigation();
+		//	-- navigation-item
+		
+		//	display		
 		var title = new Title();
 		var intro = new Intro();
-		var graph = new Graph();
-		var navigation = new Navigation();
-
-		var Signal = signals.Signal;
-		var navigation_over = new Signal();
-		var navigation_out = new Signal();
+		
+		// app
+		var particle_system = new ParticleSystem();
+		//	-- particle
+		//	-- shapes
+		//		-- timeline
+		//		-- map
+		//		-- ect.
+		
+		//var event_system = new EventSystem();
+		//	-- eventPhase
+		
+		var SCREEN_UPDATED = new Signal();
 		
 		$( window ).resize( resized );
-		$( 'nav a' )
-			.click( navigated )
-			.hover( navigationOver, navigationOut )
 		
 		init();
 		
 		function init()
 		{		
-			$( 'body' ).prepend('<canvas id="canvas" width="960" height="450">sorry but your browser doesn\'t support the canvas element.</canvas>');
+			var screen = { width: $( window ).width(), height: $( window ).height() };
 			
+			$( 'body' ).prepend('<canvas id="canvas" width="960" height="450">sorry but your browser doesn\'t support the canvas element.</canvas>');
 			$( '#canvas' ).css( { position: 'absolute', top: 0, left: 0, zIndex: 2 } );
 			
 			resized();
 			dispatch();
 			
-			title.init();			
-		}
+			title.init();
+			
+			SCREEN_UPDATED.dispatch( screen );		
+		};
 		
 		function dispatch()
 		{
-			title.animation_done.add( intro.init );
-			intro.animation_done.add( graph.init );
-			intro.animation_done.add( navigation.init );
-			navigation_over.add( graph.navigationOver );
-			navigation_over.add( navigation.navigationOver );
-			navigation_out.add( graph.navigationOut );
-			navigation_out.add( navigation.navigationOut );
-		}
-		
-		function navigated( $event )
-		{
-			$event.preventDefault();
-			$( $event.target ).closest('span').find('a').removeClass( 'active' );
-			$( $event.target ).addClass('active');
-			graph.navigate( $( $event.target ).attr('href').replace('#', '') );
-		}
-		
-		function navigationOver( $event )
-		{
-			navigation_over.dispatch( $event );
-		}
-		
-		function navigationOut( $event )
-		{
-			navigation_out.dispatch( $event );
+			title.ANIMATED_IN.add( intro.init );
+			
+			intro.ANIMATED_IN.add( navigation.init );
+			intro.ANIMATED_IN.add( particle_system.init );			
+			navigation.NAVIGATED.add( particle_system.navigate );
+			//navigation.NAVIGATED.add( event_system.navigate );
+			
+			for( var i = 0; i < navigation.getNavigationItems().length; i++ )
+			{
+				
+				navigation.getNavigationItems()[i].CLICKED.add( navigation.navigate );
+				//navigation.getNavigationItems()[i].hovered.add( symbols.show );
+				//navigation.getNavigationItems()[i].outed.add( symbols.stop );
+			}
+			
+			SCREEN_UPDATED.add( particle_system.setScreenSize );
 		}
 		
 		function resized()
 		{
-			$( '#canvas' ).attr({width: $(window).width(), height: $(window).height()});
+			var screen = { width: $( window ).width(), height: $( window ).height() };
 			
-			graph.setScreenSize({width: $(window).width(), height: $(window).height()});
+			$( '#canvas' ).attr( screen );
+			SCREEN_UPDATED.dispatch( screen );
 		}
 	}
 );

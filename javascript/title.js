@@ -3,10 +3,14 @@ var Title = function( )
 	var _self = this;
 	var Signal = signals.Signal;
 	
+	_self.ANIMATED_IN = new Signal();
 	
-	_self.animation_done = new Signal();
+	//(function(){ construct() })()
 	
-	//(function(){ init(); })()
+	//function construct()
+	//{
+	
+	//}
 		
 	_self.init = function()
 	{		
@@ -15,35 +19,34 @@ var Title = function( )
 		setTimeout( function() { titleAnimateIn( $( 'h1' ), text ); }, 700 );
 	}
 	
-	function titleAnimateIn( $element, $text )
+	function titleAnimateIn( $dom_element, $text )
 	{
-		$element.text( '' );
+		$dom_element.text( '' );
 		
 		for( var i = 0; i < $text.length; i++ )
 		{
-			$element.append( '<span>' + $text[i] + '</span>' );
+			$dom_element.append( '<span>' + $text[i] + '</span>' );
 		}
 		
-		characterAnimateIn( $element, $text, 0 );
+		characterAnimateIn( $dom_element, $text, 0 );
 		
-		$element.show();
-		//_self.animation_done.dispatch();
+		$dom_element.show();
 	}
 	
-	function characterAnimateIn( $element, $text, $index )
+	function characterAnimateIn( $dom_element, $text, $index )
 	{		
 		if( $index < $text.length - 1 )
 		{
-			$element
+			$dom_element
 				.find( 'span:eq(' + $index + ')' )
 				.addClass( 'active' )
 				
-			setTimeout( function() { characterAnimateIn( $element, $text, parseInt( $index + 1 ) ); }, 70 );
+			setTimeout( function() { characterAnimateIn( $dom_element, $text, parseInt( $index + 1 ) ); }, 70 );
 		}
 		
 		else
 		{
-			setTimeout( function() { _self.animation_done.dispatch(); }, 1000 );
+			setTimeout( function() { _self.ANIMATED_IN.dispatch(); }, 1000 );
 		}
 	}
 }
