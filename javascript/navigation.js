@@ -25,9 +25,17 @@ var Navigation = function()
 		return navigation_items;
 	}
 	
-	_self.navigate = function(  )
+	_self.navigate = function( $target )
 	{
-		//_self.NAVIGATED.dispatch( $target );
+		//console.log( $target )
+		
+		for( var i = 0; i < navigation_items.length; i++ )
+		{
+			//console.log( navigation_items[i] );
+			navigation_items[i].showSpecificFor( $target )
+		}
+		
+		_self.NAVIGATED.dispatch( $target );
 	}
 	
 	function initNavigationItems()

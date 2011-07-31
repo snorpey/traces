@@ -25,7 +25,7 @@ var Intro = function()
 				$( this ).text('');
 			}
 		);
-			
+_self.ANIMATED_IN.dispatch();
 		textWrite( 0, 0, text );	
 	}
 	
@@ -53,7 +53,7 @@ var Intro = function()
 			else
 			{
 				recurse = false;
-				setTimeout( function(){ _self.ANIMATED_IN.dispatch(); }, 1500 );
+				setTimeout( function(){ /*_self.ANIMATED_IN.dispatch();*/ }, 1500 );
 			}
 		}
 		

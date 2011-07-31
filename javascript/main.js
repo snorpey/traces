@@ -54,7 +54,6 @@ $(document).ready(
 			
 			for( var i = 0; i < navigation.getNavigationItems().length; i++ )
 			{
-				
 				navigation.getNavigationItems()[i].CLICKED.add( navigation.navigate );
 				//navigation.getNavigationItems()[i].hovered.add( symbols.show );
 				//navigation.getNavigationItems()[i].outed.add( symbols.stop );
@@ -72,4 +71,3 @@ $(document).ready(
 		}
 	}
 );
-

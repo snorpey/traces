@@ -15,7 +15,7 @@ var Title = function( )
 	_self.init = function()
 	{		
 		var text = $( 'h1' ).text().split( '' );
-		
+_self.ANIMATED_IN.dispatch();
 		setTimeout( function() { titleAnimateIn( $( 'h1' ), text ); }, 700 );
 	}
 	
@@ -46,7 +46,7 @@ var Title = function( )
 		
 		else
 		{
-			setTimeout( function() { _self.ANIMATED_IN.dispatch(); }, 1000 );
+			setTimeout( function() { /*_self.ANIMATED_IN.dispatch();*/ }, 1000 );
 		}
 	}
 }
