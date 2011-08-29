@@ -5,22 +5,15 @@ $(document).ready(
 		
 		//	interface
 		var navigation = new Navigation();
-		//	-- navigation-item
 		
 		//	display		
 		var title = new Title();
 		var intro = new Intro();
 		
 		// app
-		var particle_system = new ParticleSystem();
-		//	-- particle
-		//	-- shapes
-		//		-- timeline
-		//		-- map
-		//		-- ect.
-		
-		//var event_system = new EventSystem();
-		//	-- eventPhase
+		var particle_system = new ParticleSystem();		
+		var event_system = new EventSystem();
+		var target_system = new TargetSystem();
 		
 		var SCREEN_UPDATED = new Signal();
 		
@@ -46,20 +39,34 @@ $(document).ready(
 		function dispatch()
 		{
 			title.ANIMATED_IN.add( intro.init );
-			
+
 			intro.ANIMATED_IN.add( navigation.init );
-			intro.ANIMATED_IN.add( particle_system.init );			
-			navigation.NAVIGATED.add( particle_system.navigate );
-			//navigation.NAVIGATED.add( event_system.navigate );
+			intro.ANIMATED_IN.add( particle_system.init );
+						
+			navigation.NAVIGATED.add( particle_system.navigated );
+			navigation.NAVIGATED.add( event_system.navigated );
+			
+			//navigation.HOVERED.add( particle_system.navigated );
+			//navigation.OUTED.add( event_system.navigated );
+			
+			particle_system.PARTICLES_UPDATED.add( target_system.particlesUpdated );
+			
+			event_system.EVENTS_UPDATED.add( particle_system.eventsUpdated );
+			event_system.EVENTS_FILTERED.add( particle_system.eventsFiltered );
+			event_system.EVENTS_UPDATED.add( target_system.eventsUpdated );
+			event_system.EVENTS_FILTERED.add( target_system.eventsUpdated );
+			
+			target_system.TARGETS_UPDATED.add( particle_system.targetsUpdated );
 			
 			for( var i = 0; i < navigation.getNavigationItems().length; i++ )
 			{
 				navigation.getNavigationItems()[i].CLICKED.add( navigation.navigate );
-				//navigation.getNavigationItems()[i].hovered.add( symbols.show );
-				//navigation.getNavigationItems()[i].outed.add( symbols.stop );
+				navigation.getNavigationItems()[i].HOVERED.add( target_system.hovered );
+				navigation.getNavigationItems()[i].OUTED.add( target_system.outed );
 			}
 			
-			SCREEN_UPDATED.add( particle_system.setScreenSize );
+			SCREEN_UPDATED.add( particle_system.screenUpdated );
+			SCREEN_UPDATED.add( target_system.screenUpdated );
 		}
 		
 		function resized()
@@ -67,6 +74,7 @@ $(document).ready(
 			var screen = { width: $( window ).width(), height: $( window ).height() };
 			
 			$( '#canvas' ).attr( screen );
+			
 			SCREEN_UPDATED.dispatch( screen );
 		}
 	}

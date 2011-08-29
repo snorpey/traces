@@ -1,4 +1,4 @@
-var Generator = function()
+var EventGenerator = function()
 {
 //	data-generation class
 //	produces different kinds of sample data

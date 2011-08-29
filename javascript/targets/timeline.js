@@ -3,9 +3,6 @@ var Timeline = function( $particles, $events )
 	var _self = this;
 	var particles;
 	var events;
-	var symbols = [];
-	var active = false;
-	var symbol_active = -1;
 	var screen = { width: 600, height: 800 };
 	
 	(function(){ init( $particles, $events ); })()
@@ -14,21 +11,6 @@ var Timeline = function( $particles, $events )
 	{
 		particles = $particles;
 		events = $events;
-	}
-	
-	_self.setActive = function()
-	{		
-		active = true;
-	}
-	
-	_self.setInactive = function()
-	{
-		active = false;
-	}
-	
-	_self.getActive = function()
-	{
-		return active;
 	}
 	
 	_self.getPositions = function()

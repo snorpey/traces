@@ -11,73 +11,44 @@ var ParticleSystem = function()
 	var generator;
 	var filter = 'all';
 	var display = 'line';
-	
-	var timeline;
-	var clock;
-	var map;
-	var symbols;
-	
+			
 	var data_types = ['code', 'music', 'text', 'game', 'location', 'photo'];
+	
+	var _targets;
+	
+	var Signal = signals.Signal;
+	
+	_self.PARTICLES_UPDATED = new Signal();
 	
 	_self.init = function()
 	{
 		ctx = document.getElementById('canvas').getContext('2d');
 		
-		symbols = new Symbols( particles );
-		timeline = new Timeline( particles, events );
-		clock = new Clock( particles, events );
-		map = new Map( particles, events );
-		
-		eventsGenerate(100);	
 		_self.run();
 	}
 	
 	//	set screen size.
 	//	called every time the window size changes
-	_self.setScreenSize = function( $screen )
+	_self.screenUpdated = function( $screen )
 	{
 		screen = $screen;
-		
-		if( timeline )
-		{
-			timeline.screenUpdate( screen );
-		}
-		
-		if( clock )
-		{
-			clock.screenUpdate( screen );
-		}
 	}
 	
-	_self.navigate = function( $target )
+	_self.navigated = function( $target )
 	{				
-		if(
-			$target.action === 'filter' && 
-			$target.value !== undefined
-		)
-		{
-			//filterEvents( $target.value );
-		}
 		
-		if(
-			$target.action === 'orderby' && 
-			$target.value !== undefined
-		)
-		{
-			//orderEventsBy( $target.value );
-		}
+		//updateParticleTargets( $target );
 	}
 	
 	_self.run = function()
 	{
-		//requestAnimFrame( _self.run );
+		requestAnimFrame( _self.run );
 		update();
-		draw();
-	}
-	
-	_self.getParticleCount = function()
-	{
-		return particles.length;
+		
+		//if( particlesMoving() )
+		//{
+			draw();
+		//}		
 	}
 	
 	function update()
@@ -85,53 +56,8 @@ var ParticleSystem = function()
 		// set particle position
 		// this is where the cool shit is supposed to happen. (I guess)
 		
-		var targets = [];
-				
-		if( timeline.getActive() )
-		{
-			targets = timeline.getPositions();
-		}
-		
-		if( clock.getActive() )
-		{
-			targets = clock.getPositions();
-		}
-		
-		if( map.getActive() )
-		{
-			targets = map.getPositions();
-		}
-		
-		if( symbols.getActive() )
-		{
-			targets = symbols.getPositions();
-		}
-		
-		for( var i = 0; i < events.length; i++ )
-		{
-			var target = {};
-			
-			if( targets.length > 0 )
-			{
-				target = targets[i];
-				
-				//target.x = mapRange(i, 0, events.length, 50, screen.width - 50);
-				//target.y = screen.height / 2;
-			}
-			
-			else
-			{
-				//var target.x = mapRange(events[i].getDate().format('ss'), 60, 0, 50, screen.width - 200);
-				target.x = mapRange(i, 0, events.length, 50, screen.width - 50);
-				target.y = screen.height / 2;
-			}
-			
-			particles[i].applyAttractionForce( Vector.create( [target.x, target.y, 0] ), -1, 0.01 );
-		}
-		
 		for(var i = 0; i < particles.length; i++)
 		{
-			particles[i].addDampening(0.8);
 			particles[i].update();
 		}
 		
@@ -166,13 +92,16 @@ var ParticleSystem = function()
 	//	draw particles on the canvas
 	function draw()
 	{
+		//console.log( particles.length );
 		//clear background
 		//ctx.fillStyle = 'rgba(255, 255, 255, 0.79)';
 		//ctx.fillRect(0, 0, screen.width, screen.height);
 		
+		//console.log( particles[0].getPosition().x )
+		
 		ctx.clearRect(0, 0, screen.width, screen.height);
 		
-		if( map.getActive() )
+		/*if( map.getActive() )
 		{
 			var image = new Image();
             	image.src = 'images/world-map.png';
@@ -184,13 +113,13 @@ var ParticleSystem = function()
 				ctx.globalAlpha = 1;
 			}
 			
-			catch(err){}
-		}		
+			catch( error ){}
+		}*/	
 		
 		//draw particles
 		var i = particles.length;
 
-		while(i--)
+		while( i-- )
 		{
 			if( particles[i].getColor().a !== 0 )
 			{
@@ -206,50 +135,64 @@ var ParticleSystem = function()
 		}
 	}
 	
-	//	data generation.
-	//	eventually to be replaced with
-	//	a callback for an AJAX call in main
-	//  --> Main
-	function eventsGenerate($datasets)
+	_self.eventsUpdated = function( $events )
 	{
-		if( generator === undefined )
-		{
-			generator = new Generator();
-		}
+		//console.log( $events );
 		
-		if( events.length < $datasets )
-		{			
-			events.push( generator.generateRandom() );
-			
-			particleAdd( event );
-			timer( function(){ eventsGenerate( $datasets ); filterEvents( filter ); } );
-		}
-	}
-	
-	_self.navigationOver = function( $event )
-	{		
-		for( var i = 0; i < data_types.length; i++ )
+		events = $events;
+		
+		if( $events.length > particles.length )
 		{
-			if( $( $event.target ).attr('href').replace('#filter-', '') === data_types[i] )
+			for( var i = 0; i < $events.length - particles.length; i++ )
 			{
-				symbols.setSymbol( data_types[i] );
+				particleAdd( $events[particles.length + i] );
 			}
-		}	
+		}
 	}
 	
-	_self.navigationOut = function( $event )
+	_self.eventsFiltered = function( $events_visible )
 	{
-		symbols.setInactive();
-	}
-	
-	function timer( $callback, $max )
-	{
-		if(!$max)
+		if( $events_visible.length === particles.length )
 		{
-			$max = 100;
+			for( var i = 0; i < $events_visible.length; i++ )
+			{
+				particles[i].setVisibility( $events_visible[i].visible );
+			}
 		}
 		
-		setTimeout( $callback, Math.random() * $max );
+		if( $events_visible.length > particles.length )
+		{
+			for( var i = 0; i < particles.length; i++ )
+			{
+				particles[i].setVisibility( $events_visible[i].visible );
+			}
+		}
+		
+		if( $events_visible.length < particles.length )
+		{
+			for( var i = 0; i < $events_visible.length; i++ )
+			{
+				particles[i].setVisibility( $events_visible[i].visible );
+			}
+			
+			for( var i = $events_visible.length - 1; i < particles.length - $events_visible.length; i++ )
+			{
+				particles[i].setVisibility( false );
+			}
+		}
+	}
+	
+	_self.targetsUpdated = function( $targets )
+	{
+		if( _targets !== $targets)
+		{
+			_targets = $targets;
+		}
+		
+		for(var i = 0; i < $targets.length; i++)
+		{
+			particles[i].setTarget( $targets[i] );
+		}
 	}
 	
 	//	create a new particle, corresponding to an event
@@ -259,41 +202,34 @@ var ParticleSystem = function()
 	{
 		var index = events.length - 1;
 		
-		var particle = {};
-			particle.x = Math.round( Math.random() * screen.width );
-			particle.y = Math.round( Math.random() * screen.height );
-			particle.index = events.length;
+		var particle_position = {};
+			particle_position.x = Math.round( Math.random() * screen.width );
+			particle_position.y = Math.round( Math.random() * screen.height );
+			particle_index = events.length;
 		
-		particles[index] = new Particle();
-		particles[index].init( particle );
+		//particles[index] = new Particle( particle_position, particle_index );
+		particles.push( new Particle( particle_position, particle_index ) );
 		
-		if( symbols.getActive() )
+		_self.PARTICLES_UPDATED.dispatch( particles );
+	}
+	
+	function particlesMoving()
+	{
+		// if no particle is moving, stop the canvas update
+		
+		return_value = false;
+		
+		for( var i = 0; i < particles.length; i++ )
 		{
-			symbols.particlesUpdate( particles );
+			if( particles[i].getMoving() )
+			{
+				return_value = true;
+				break;
+			}
 		}
 		
-		if( timeline.getActive() )
-		{
-			timeline.particlesUpdate( particles );
-			timeline.eventsUpdate( events );			
-		}
-		
-		if( clock.getActive() )
-		{
-			clock.particlesUpdate( particles );
-			clock.eventsUpdate( events );			
-		}
-		
-		if( map.getActive() )
-		{
-			map.particlesUpdate( particles );
-			map.eventsUpdate( events );			
-		}
-		
-		timeline.screenUpdate( screen );
-		clock.screenUpdate( screen );
-		map.screenUpdate( screen );
-	}	
+		return return_value;
+	}
 	
 	function filterEvents( $type )
 	{
@@ -321,29 +257,6 @@ var ParticleSystem = function()
 		filter = $type;
 	}
 	
-	function orderEventsBy( $key )
-	{		
-		var keys = [
-			{ key: 'date',		object: timeline	},
-			{ key: 'time',		object: clock		},
-			{ key: 'location',	object: map			}
-		]
-		
-		for( var i = 0; i < keys.length; i++ )
-		{
-			if( keys[i].key === $key )
-			{
-				//display = 'keys[i].key';
-				keys[i].object.setActive();
-			}
-			
-			else
-			{
-				keys[i].object.setInactive();
-			}
-		}
-	}
-
 	//	processing.org map function
 	function mapRange( $value, $low1, $high1, $low2, $high2 )
 	{

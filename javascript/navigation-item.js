@@ -70,14 +70,14 @@ var NavigationItem = function( $dom_object )
 		return $dom_object.hasClass($target.value + '-specific');
 	}
 	
-	function getTarget()
+	function getTarget( $event )
 	{
 		var navigation_keys = dom_object.attr('href').replace('#', '').split('-');		
 		var return_value = false;
 		
 		if( navigation_keys.length > 1 )
 		{
-			return_value = { action: navigation_keys[0], value: navigation_keys[1] };
+			return_value = { action: navigation_keys[0], value: navigation_keys[1], type: $event.type };
 		}
 						
 		return return_value;
@@ -109,16 +109,16 @@ var NavigationItem = function( $dom_object )
 	
 	function click( $event )
 	{
-		_self.CLICKED.dispatch( getTarget() );
+		_self.CLICKED.dispatch( getTarget( $event ) );
 	}
 	
 	function hover( $event )
 	{
-		_self.HOVERED.dispatch( getTarget() );
+		_self.HOVERED.dispatch( getTarget( $event ) );
 	}
 	
 	function out( $event )
 	{
-		_self.OUTED.dispatch( getTarget() );
+		_self.OUTED.dispatch( getTarget( $event ) );
 	}
 }
