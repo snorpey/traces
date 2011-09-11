@@ -48,19 +48,25 @@ var Map = function( $particles, $events )
 		screen = $screen;
 	}
 	
-	function getPosition( i, event )
+	function getPosition( $index, $event )
 	{
 		var position = { x: 0, y: 0 };
-			position.x = mapRange( event.getLocation().lng, -180, 180, 0, screen.width );
-                     
-		if ( event.getLocation().lat >= 0 )
-		{
-			position.y = mapRange( event.getLocation().lat, 0, 90, screen.height / 2, 0 );
-		}
 		
-		else
-		{
-			position.y = mapRange( event.getLocation().lat, -90, 0, screen.height, screen.height / 2 );
+		if( $event.hasLocation() )
+		{	
+			var location = $event.getData().location;
+			
+			position.x = mapRange( location.lng, -180, 180, 0, screen.width );
+		
+			if ( location.lat >= 0 )
+			{
+				position.y = mapRange( location.lat, 0, 90, screen.height / 2, 0 );
+			}
+			
+			else
+			{
+				position.y = mapRange( location.lat, -90, 0, screen.height, screen.height / 2 );
+			}		
 		}
 		
 		return position;

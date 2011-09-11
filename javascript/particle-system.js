@@ -201,7 +201,10 @@ var ParticleSystem = function()
 		
 		for (  var i = 0; i < $targets.length; i++)
 		{
-			visible_particles[i].setTarget( $targets[i] );
+			if( visible_particles[i] )
+			{
+				visible_particles[i].setTarget( $targets[i] );
+			}
 		}
 	}
 	

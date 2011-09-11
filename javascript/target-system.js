@@ -187,6 +187,12 @@ var TargetSystem = function()
 				{
 					return_value = 'clock';
 				}
+				
+				if ( $navigation_item.value === 'location')
+				{
+					//console.log(  )
+					return_value = 'map';
+				}
 			}
 		}
 		
@@ -216,7 +222,7 @@ var TargetSystem = function()
 				}
 			}
 		}
-		
+			
 		if ( return_value )
 		{
 			navigation_item = $navigation_item;
