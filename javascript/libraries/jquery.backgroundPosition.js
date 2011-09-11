@@ -5,13 +5,13 @@
 
 
 (function($) {
-	if(!document.defaultView || !document.defaultView.getComputedStyle){ // IE6-IE8
+	if (!document.defaultView || !document.defaultView.getComputedStyle){ // IE6-IE8
 		var oldCurCSS = $.curCSS;
 		$.curCSS = function(elem, name, force){
-			if(name === 'background-position'){
+			if (name === 'background-position'){
 				name = 'backgroundPosition';
 			}
-			if(name !== 'backgroundPosition' || !elem.currentStyle || elem.currentStyle[ name ]){
+			if (name !== 'backgroundPosition' || !elem.currentStyle || elem.currentStyle[ name ]){
 				return oldCurCSS.apply(this, arguments);
 			}
 			var style = elem.style;
@@ -24,11 +24,11 @@
 	
 	var oldAnim = $.fn.animate;
 	$.fn.animate = function(prop){
-		if('background-position' in prop){
+		if ('background-position' in prop){
 			prop.backgroundPosition = prop['background-position'];
 			delete prop['background-position'];
 		}
-		if('backgroundPosition' in prop){
+		if ('backgroundPosition' in prop){
 			prop.backgroundPosition = '('+ prop.backgroundPosition;
 		}
 		return oldAnim.apply(this, arguments);
@@ -45,7 +45,7 @@
 	$.fx.step. backgroundPosition = function(fx) {
 		if (!fx.bgPosReady) {
 			var start = $.curCSS(fx.elem,'backgroundPosition');
-			if(!start){//FF2 no inline-style fallback
+			if (!start){//FF2 no inline-style fallback
 				start = '0px 0px';
 			}
 			

@@ -3,9 +3,6 @@ var Map = function( $particles, $events )
 	var _self = this;
 	var particles;
 	var events;
-	var symbols = [];
-	var active = false;
-	var symbol_active = -1;
 	var screen = { width: 600, height: 800 };
 	
 	(function(){ init( $particles, $events ); })()
@@ -16,28 +13,13 @@ var Map = function( $particles, $events )
 		events = $events;
 	}
 	
-	_self.setActive = function()
-	{		
-		active = true;
-	}
-	
-	_self.setInactive = function()
-	{
-		active = false;
-	}
-	
-	_self.getActive = function()
-	{
-		return active;
-	}
-	
 	_self.getPositions = function()
 	{	
 		var positions = [];
 		
-		for( var i = 0; i < events.length; i++ )
+		for ( var i = 0; i < events.length; i++ )
 		{
-			if( events[i].hasLocation() )
+			if ( events[i].hasLocation() )
 			{
 				positions[i] = getPosition( i, events[i] );
 			}
@@ -71,7 +53,7 @@ var Map = function( $particles, $events )
 		var position = { x: 0, y: 0 };
 			position.x = mapRange( event.getLocation().lng, -180, 180, 0, screen.width );
                      
-		if( event.getLocation().lat >= 0 )
+		if ( event.getLocation().lat >= 0 )
 		{
 			position.y = mapRange( event.getLocation().lat, 0, 90, screen.height / 2, 0 );
 		}
@@ -84,9 +66,9 @@ var Map = function( $particles, $events )
 		return position;
 	}
 	
-	function mapRange( $value, $low1, $high1, $low2, $high2 )
+	function mapRange( $value, $low_1, $high_1, $low_2, $high_2 )
 	{
-		return $low2 + ( $high2 - $low2 ) * ( $value - $low1) / ( $high1 - $low1 );
+		return $low_2 + ( $high_2 - $low_2 ) * ( $value - $low_1 ) / ( $high_1 - $low_1 );
 	}
 
 	function dist( $point_1, $point_2 )

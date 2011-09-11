@@ -1,66 +1,56 @@
-var Navigation = function( )
+var Navigation = function()
 {
 	var _self = this;
-	var text = [];
+	var navigation_items = [];
 	var Signal = signals.Signal;
 	
-	_self.animation_done = new Signal();
-		
+	_self.ANIMATED_IN = new Signal();
+	_self.NAVIGATED = new Signal();
+	
+	(function(){ construct(); })()	
+	
+	function construct()
+	{
+		navigation_items = initNavigationItems();
+	}
+	
 	_self.init = function()
 	{		
-		$( 'nav .specific' ).hide();
-		$( 'nav a:first' ).addClass( 'active' );
-		$( 'nav' ).fadeIn(400);
+		navigation_items[0].activate();
+		$( 'nav' ).fadeIn( 400, function(){ _self.ANIMATED_IN.dispatch(); } );
 	}
 	
-	_self.navigationOver = function( $event )
+	_self.getNavigationItems = function()
 	{
-		var type = $( event.target )
-						.attr( 'href' )
-						.replace( '#filter-', '' );
-		
-		if( type.indexOf( 'orderby' ) > -1)
+		return navigation_items;
+	}
+	
+	_self.navigate = function( $target )
+	{		
+		for ( var i = 0; i < navigation_items.length; i++ )
 		{
-			type = $( 'span:first .active' )
-						.attr( 'href' )
-						.replace( '#filter-', '' );
+			navigation_items[i].showSpecificFor( $target )
 		}
-		
-		showSpecificOptions( type );
+
+		_self.NAVIGATED.dispatch( $target );
 	}
 	
-	_self.navigationOut = function( $event )
+	function initNavigationItems()
 	{
-		var type = $( 'span:first .active' )
-						.attr( 'href' )
-						.replace( '#filter-', '' );
+		var items = [];
 		
-		showSpecificOptions( type );
+		$( 'nav a' ).each(
+			function()
+			{
+				items.push( new NavigationItem( $( this ) ) );
+			}
+		);
+		
+		return items;
 	}
 	
 	function showSpecificOptions( $type )
 	{
-		$( 'nav .specific' ).each(
-			function()
-			{
-				if( $( this ).hasClass( $type + '-specific' ) )
-				{
-					$( this )
-						.addClass( 'active' )
-						.show();
-					
-				}
-				
-				else
-				{
-					if( $( this ).hasClass( 'active' ) )
-					{
-						$( this )
-							.removeClass( 'active' )
-							.hide();
-					}
-				}
-			}
-		);
+		
 	}
 }

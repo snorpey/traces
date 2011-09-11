@@ -1,54 +1,35 @@
-var Symbols = function( $data )
+var Symbol = function( $particles, $events, $symbol_name )
 {
 	var _self = this;
 	var particles;
-	var symbols = [];
-	var active = false;
-	var symbol_active = -1;
-		
-	(function(){ init( $data ); })()
+	var events;
+	var screen = { width: 600, height: 800 };
 	
-	function init( $particles )
+	var symbol;
+	var symbol_data = [];
+	
+	(function(){ init( $particles, $events, $symbol_name ); })()
+	
+	function init( $particles, $events, $symbol_name )
 	{
+		symbol_data = setSymbolData( true );
 		particles = $particles;
-		setSymbolData( true, true );
-	}
-	
-	_self.setSymbol = function( $symbol )
-	{		
-		for( var i = 0; i < symbols.length; i++ )
-		{			
-			if ( symbols[i].name === $symbol )
-			{
-				active = true;
-				symbol_active = i;
-				
-				//getParticlePosition( 5, symbols[i], getPathLength( symbol_active ) );
-				break;
-			}			
-		}
-	}
-	
-	_self.setInactive = function()
-	{
-		active = false;
-	}
-	
-	_self.getActive = function()
-	{
-		return active;
+		events = $events;
+		symbol = getSymbolByName( $symbol_name );
 	}
 	
 	_self.getPositions = function()
-	{
+	{		
 		var positions = [];
 		
-		for (var i = 0; i < particles.length; i++)
+		for ( var i = 0; i < particles.length; i++ )
 		{
 			var particle = particles[i];
-
-			positions[i] = getParticlePosition( i, symbols[symbol_active], getPathLength( symbol_active ) );
+		
+			positions[i] = getParticlePosition( i, symbol, getPathLength( symbol ) );
 		}
+
+		positions = positionsCenter( symbol, positions );
 		
 		return positions;
 	}
@@ -58,28 +39,36 @@ var Symbols = function( $data )
 		particles = $particles;
 	}
 	
-	function getPathLength( $symbol_index )
+	_self.eventsUpdate = function( $events )
+	{
+		events = $events;
+	}
+	
+	_self.screenUpdate = function( $screen )
+	{
+		screen = $screen;
+		// -->parent: update
+	}
+	
+	function getPathLength( $symbol )
 	{
 		var path_length = 0;
 	
-		if ( symbol_active !== -1 )
+		for ( var i = 0; i < $symbol.points.length; i++ )
 		{
-			for ( var i = 0; i < symbols[$symbol_index].points.length; i++ )
+			var point = $symbol.points[i];
+			
+			if ( i < $symbol.points.length - 1 )
 			{
-				var point = symbols[$symbol_index].points[i];
-				
-				if( i < symbols[$symbol_index].points.length - 1 )
-				{
-					path_length += dist( symbols[$symbol_index].points[i], symbols[$symbol_index].points[parseInt( i + 1 )] );
-				}
-				
-				else
-				{
-					path_length += dist( symbols[$symbol_index].points[i], symbols[$symbol_index].points[0] );
-				}
+				path_length += dist( $symbol.points[i], $symbol.points[parseInt( i + 1 )] );
+			}
+			
+			else
+			{
+				//path_length += dist( $symbol.points[i], $symbol.points[0] );
 			}
 		}
-		
+			
 		return path_length;
 	}
 	
@@ -94,41 +83,47 @@ var Symbols = function( $data )
 		
 		function getPathSegment( $path_segment )
 		{		
-			if ( path_segment_distance < distance_on_path && $path_segment < $path.points.length - 1)
-			{				
-				path_segment_distance += dist( $path.points[$path_segment], $path.points[parseInt( $path_segment + 1 )] );
-				getPathSegment( parseInt( $path_segment + 1 ) );
-			}
-			
-			else
+			if ( $path_segment < $path.points.length - 1 )
 			{
-				getPositionOnPath( $particle_index, distance_on_path, $path, $path_segment, path_segment_distance );
+				if ( path_segment_distance < distance_on_path )
+				{			
+					path_segment_distance += dist( $path.points[$path_segment], $path.points[parseInt( $path_segment + 1 )] );	
+					
+					getPathSegment( parseInt( $path_segment + 1 ) );
+				}
+				
+				else
+				{
+					var path_segment_index = $path_segment - 1;
+					
+					if ( $path_segment === 0 )
+					{
+						path_segment_index = 0;
+					}
+					
+					getPositionOnPath( $particle_index, distance_on_path, $path, path_segment_index, path_segment_distance );
+				}
 			}			
 		}
 		
 		function getPositionOnPath( $particle_index, $distance_on_path, $path, $path_segment, $path_segment_distance )
 		{
-			var next_segment = parseInt($path_segment + 1);			
-			
-			if ( $path_segment === $path.points.length - 1)
-			{
-				next_segment = 0;
-			}
-			
-			var percentage_on_segment = ( distance_on_path - path_segment_distance ) / dist( $path.points[$path_segment], $path.points[next_segment] );			
-			
+			var next_segment = parseInt( $path_segment + 1 );			
+			var percentage_on_segment = ( distance_on_path - path_segment_distance ) / dist( $path.points[$path_segment], $path.points[next_segment] );		
 			position = {
-				x: (percentage_on_segment * ( $path.points[next_segment].x - $path.points[$path_segment].x )) + $path.points[next_segment].x,
-				y: (percentage_on_segment * ( $path.points[next_segment].y - $path.points[$path_segment].y )) + $path.points[next_segment].y
+				x: ( percentage_on_segment * ( $path.points[next_segment].x - $path.points[$path_segment].x ) ) + $path.points[next_segment].x,
+				y: ( percentage_on_segment * ( $path.points[next_segment].y - $path.points[$path_segment].y ) ) + $path.points[next_segment].y
 			}
 		}
 		
 		return position;
 	}
 
-	function setSymbolData( $scale, $center )
+	function setSymbolData( $scale )
 	{
-		symbols[0] = {
+		var data = [];
+		
+		data[0] = {
 			name: 'music',
 			points: [
 				{ x: 9.612, y: 11.353 }, 
@@ -169,7 +164,7 @@ var Symbols = function( $data )
 			]
 		}
 		
-		symbols[1] = {
+		data[1] = {
 			name: 'game',
 			points: [
 				{ x: 1.271, y: 12.458 }, 
@@ -278,7 +273,7 @@ var Symbols = function( $data )
 			]
 		}
 		
-		symbols[2] = {
+		data[2] = {
 			name: 'location',
 			points: [
 				{ x: 1.445, y: 4.013 }, 
@@ -295,71 +290,84 @@ var Symbols = function( $data )
 			]
 		}
 		
-		for( var i = 0; i < symbols.length; i++ )
+		for ( var i = 0; i < data.length; i++ )
 		{
-			symbols[i].size = getSymbolSize( symbols[i] );
+			data[i].size = getSymbolSize( data[i].points );
 			
-			if( $scale )
+			if ( $scale )
 			{
-				symbols[i] = symbolScale( symbols[i], ( 300 / symbols[i].size.height ) );
+				data[i].points = symbolScale( data[i].points, ( 300 / data[i].size.height ) );
+				data[i].size = getSymbolSize( data[i].points );
 			}
-			
-			if( $center )
-			{
-				symbols[i].size = getSymbolSize( symbols[i] );
-				symbols[i] = symbolCenter( symbols[i] );
-			}
-		}	
+		}
+		
+		return data;	
 	}
 	
-	function getSymbolSize( $path )
+	function getSymbolByName( $name )
+	{
+		var return_value;
+		
+		for ( var i = 0; i < symbol_data.length; i++ )
+		{	
+			if ( symbol_data[i].name === $name )
+			{
+				return_value = symbol_data[i];
+				break;
+			}
+		}
+		
+		return return_value;
+	}
+	
+	function getSymbolSize( $points )
 	{
 		var size = { width: 0, height: 0 };
 		
-		for( var i = 0; i < $path.points.length; i++ )
+		for ( var i = 0; i < $points.length; i++ )
 		{
-			if( $path.points[i].x > size.width )
+			if ( $points[i].x > size.width )
 			{
-				size.width = $path.points[i].x;
+				size.width = $points[i].x;
 			}
 			
-			if( $path.points[i].y > size.height )
+			if ( $points[i].y > size.height )
 			{
-				size.height = $path.points[i].y;
+				size.height = $points[i].y;
 			}
 		}
 		
 		return size;
 	}
 	
-	function symbolScale( $path, $scale )
+	function symbolScale( $points, $scale )
 	{		
 		var new_positions = [];
 		
-		for( var i = 0; i < $path.points.length; i++ )
+		for ( var i = 0; i < $points.length; i++ )
 		{
-			new_positions.push( { x: $path.points[i].x * $scale, y: $path.points[i].y * $scale } );
+			new_positions[i] =  { x: $points[i].x * $scale, y: $points[i].y * $scale };
 		}
-		
-		$path.points = new_positions;
 				
-		return $path;
+		return new_positions;
 	}
-	
-	function symbolCenter( $path )
-	{
-		var new_positions = [];
-		var left = ( $( window ).width() - $path.size.width ) / 2;
-		var top = ( $( window ).height() - $path.size.height ) / 2;
 		
-		for( var i = 0; i < $path.points.length; i++ )
+	function positionsCenter( $symbol, $positions )
+	{		
+		var left = ( screen.width - $symbol.size.width ) / 2;
+		var top = ( screen.height - $symbol.size.height ) / 2;
+		var positions = $positions;
+		
+		if ( $symbol.size )
 		{
-			new_positions.push( { x: parseInt( $path.points[i].x + left ), y: parseInt( $path.points[i].y + top ) } );
+			for ( var i = 0; i < positions.length; i++ )
+			{
+				positions[i].x += left;
+				positions[i].y += top; 
+			}
 		}
 		
-		$path.points = new_positions;
-		
-		return $path;
+		return positions;
 	}
 	
 	function dist( $point_1, $point_2 )

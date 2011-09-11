@@ -1,52 +1,56 @@
-var Particle = function()
+var Particle = function( $position, $index )
 {
 	var _self = this;
-	var position = null;
-	var velocity = null;
-	var acceleration = null;
-	var damping = 0.13;
-	var lifespan = 1100;
-	var death_rate = 1;
-	var has_lifespan = true;
+	
 	var index;
-	var visibility = true;
+	
+	var position;
+	var velocity;
+	var accelleration;
+	
+	var target;
+	
+	var has_target = false;
+	var is_moving = false;
+	var visible = true;
+	
+	var damping = 0.13;
 	var color = { r: 0, g: 0, b: 0, a: 1 };
 	
-	_self.init = function( $data )
+	(function(){ init( $position, $index ); })();
+	
+	function init( $position, $index )
 	{
-		position = Vector.create( [$data.x, $data.y, 0] );
+		index = $index;
+		position = Vector.create( [$position.x, $position.y, 0] );
 		velocity = Vector.create( [0, 0, 0] );
 		acceleration = Vector.create( [0, 0, 0] );
-		index = $data.index;
 	}
 	
-	//	update particle values
-	_self.update = function()
+	_self.run = function()
 	{
-		velocity = velocity.add( acceleration );
-		position = position.add( velocity );
-
-		//reset acceleration
-		acceleration.setElements([0, 0, 0]);
-		
-		fade();
-		
-		//if this has a lifespan, move towards 0
-		if( _self.has_lifespan )
+		update();
+		draw();
+	}
+	
+	_self.setTarget = function( $target )
+	{
+		if ( $target )
 		{
-			lifespan -= death_rate;
+			target = $target;
+			has_target = true;
+		}
+		
+		else
+		{
+			target = undefined;
+			has_target = false;
 		}
 	}
-	
-	//	apply force to this article
-	_self.applyForce = function( $force )
+		
+	_self.removeTarget = function()
 	{
-		acceleration = acceleration.add( $force );
-	}
-	
-	_self.addDampening = function( $dampening )
-	{
-		velocity = velocity.multiply( $dampening );
+		_self.setTarget();
 	}
 	
 	_self.getPosition = function()
@@ -57,9 +61,9 @@ var Particle = function()
 		};
 	}
 		
-	_self.setPosition = function(x, y, z)
+	_self.setPosition = function( x, y, z )
 	{
-		position.setElements([x, y, z]);
+		position.setElements( [x, y, z] );
 	}
 	
 	_self.getVelocity = function()
@@ -71,109 +75,129 @@ var Particle = function()
 		};
 	}
 	
-	_self.setVelocity = function( $x, $y, $z )
+	_self.getColor = function()
 	{
-		velocity.setElements( [$x, $y, $z] );
-	}	
-	
-	_self.setLifespan = function( $lifespan, $death_rate )
-	{
-		lifespan = $lifespan;
-		death_rate = $death_rate;
-		has_lifespan = true;
-	}
-		
-	_self.isDead = function()
-	{
-		return lifespan <= 0;
+		return_value = color;
 	}
 	
-	_self.applyParticleRepulsion = function( $particle, $radius, $scale )
+	_self.getMoving = function()
 	{
-		applyRepulsionForce( $particle.position, $radius, $scale, $particle ); 
+		return is_moving;
 	}
 	
-	_self.applyAttractionForce = function( $force, $radius, $scale, $particle )
+	_self.setVisibility = function( $visible )
 	{
-		var distance = position.distanceFrom( $force );
+		visible = $visible;
 		
-		// do nothing
-		if(distance > $radius && $radius != -1) return;
-		
-		//Get Direction
-		var direction = position.subtract($force).toUnitVector();
-		
-		if($radius != -1)
-		{
-		//Get Scale
-			var pct = 1 - (distance / $radius);
-			var scale_vec = Vector.create([$scale, $scale, 0]);
-		
-		//Find new force
-			var new_force = direction.multiply(distance).multiply($scale).multiply(pct);
-		}
-		
-		else
-		{
-			var new_force = direction.multiply(distance).multiply($scale);
-		}
-		
-		//Apply
-		acceleration = acceleration.subtract(new_force);
-		
-	}
-	
-	_self.applyRepulsionForce = function($force, $radius, $scale, $particle)
-	{
-		var direction = position.subtract($force).toUnitVector();
-		var distance = position.distanceFrom($force);
-		
-		if(distance > $radius) return;
-		
-		//Scale
-		var pct = 1 - (distance / $radius);
-		var scale_vec = Vector.create([$scale, $scale, 0]);
-		
-		var new_force = direction.multiply(distance).multiply($scale).multiply(pct);
-		
-		//Apply
-		acceleration = acceleration.add(new_force);
-		
-		//	apply force to other particle
-		if($particle)
-		{
-			$particle.acceleration = $particle.acceleration.subtract(new_force);
-		}
-	}
-	
-	_self.setVisibility = function( $visibility )
-	{
-		visibility = $visibility;
+		fade();
 	}
 	
 	_self.getVisibility = function()
 	{
-		return visibility;
+		return visible;
 	}
 	
-	_self.getColor = function( $as_string )
-	{
-		if( $as_string )
-		{
-			return 'rgba(' + color.r + ', ' + color.g + ', ' + color.b + ', ' + color.a + ')';  
+	_self.update = function()
+	{		
+		
+		if ( has_target )
+		{						
+			if ( position.distanceFrom( Vector.create( [target.x, target.y, 0] ) ) > 0.2 )
+			{
+				
+				is_moving = true;
+				applyAttractionForce( Vector.create( [target.x, target.y, 0] ), -1, 0.01 );
+			}
+			
+			else
+			{
+				is_moving = false;
+			}
 		}
 		
 		else
 		{
-			return color;
-		}		
+			// YAAY. MOVE
+		}
+		
+		velocity = velocity.add( acceleration );
+		position = position.add( velocity );
+	
+		
+		//reset acceleration
+		acceleration.setElements( [0, 0, 0] );
+		
+		addDampening( 0.8 );
+		fade();
+	}
+	
+	/*_self.updateFilter( $filter )
+	{
+		if (
+			$filter  
+		)
+		{
+			
+		}
+	}*/
+	
+	function draw()
+	{
+		// draw particle
+		// maybe somewhere else?
+	}
+	
+	function applyForce( $force )
+	{
+		acceleration = acceleration.add( $force );
+	}
+	
+	function addDampening( $dampening )
+	{
+		velocity = velocity.multiply( $dampening );
+	}
+	
+	function applyAttractionForce( $force, $radius, $scale )
+	{
+		var distance = position.distanceFrom( $force );
+		
+		if (
+			distance > $radius &&
+			$radius != -1
+		)
+		{
+			return;
+		}
+		
+		//Get Direction
+		var direction = position.subtract( $force ).toUnitVector();
+		
+		if ( $radius != -1 )
+		{
+			//Get Scale
+			var pct = 1 - ( distance / $radius );
+			var scale_vec = Vector.create( [$scale, $scale, 0] );
+		
+			//Find new force
+			var new_force = direction.multiply( distance ).multiply( $scale ).multiply( pct );
+		}
+		
+		else
+		{
+			var new_force = direction.multiply( distance ).multiply( $scale );
+		}
+		
+		acceleration = acceleration.subtract( new_force );
 	}
 	
 	function fade()
 	{
-		if(!visibility && color.a > 0)
+		if (
+			! visible &&
+			color.a > 0
+		)
 		{
-			if( color.a < 0.02)
+			if ( color.a < 0.02)
 			{
 				color.a = 0;
 			}
@@ -184,9 +208,12 @@ var Particle = function()
 			}
 		}
 		
-		if(visibility && color.a < 1)
+		if (
+			visible &&
+			color.a < 1
+		)
 		{
-			if( color.a > 0.98)
+			if ( color.a > 0.98)
 			{
 				color.a = 1;
 			}
@@ -197,6 +224,6 @@ var Particle = function()
 			}
 		}
 		
-		color.a = parseFloat(color.a).toFixed(2);
+		color.a = parseFloat( color.a ).toFixed( 2 );
 	}
 };

@@ -5,21 +5,27 @@ var Intro = function()
 	var Signal = signals.Signal;
 	
 	
-	_self.animation_done = new Signal();
-		
+	_self.ANIMATED_IN = new Signal();
+	
+	//(function(){ construct() })()
+	
+	//function construct()
+	//{
+	
+	//}
+	
 	_self.init = function()
 	{		
 		$( '#text > p' ).each(
 			function()
 			{
-				var paragraph = [];
-				paragraph = $( this ).text().split('');
+				var paragraph = $( this ).text().split('');
 				text.push( paragraph );
 				
 				$( this ).text('');
 			}
 		);
-			
+_self.ANIMATED_IN.dispatch();
 		textWrite( 0, 0, text );	
 	}
 	
@@ -47,13 +53,13 @@ var Intro = function()
 			else
 			{
 				recurse = false;
-				setTimeout( function(){ _self.animation_done.dispatch(); }, 1500 );
+				setTimeout( function(){ /*_self.ANIMATED_IN.dispatch();*/ }, 1500 );
 			}
 		}
 		
 		if( recurse )
 		{
-			for( var i = 0; i < $character; i++ )
+			for ( var i = 0; i < $character; i++ )
 			{
 				text_insert += $text[$paragraph][i];
 			}
