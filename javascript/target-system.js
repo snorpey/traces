@@ -40,6 +40,7 @@ var TargetSystem = function()
 		)
 		{
 			//orderEventsBy( $target.value );
+			_self.TARGETS_UPDATED.dispatch( targetPositions( navigationToTarget( $navigation_item ) ) );
 		}
 		
 		//if ( navigationToTarget( $navigation_item ) )
@@ -176,7 +177,12 @@ var TargetSystem = function()
 			}
 			
 			if ( $navigation_item.action === 'orderby' )
-			{
+			{	
+				if ( $navigation_item.value === 'date')
+				{
+					return_value = 'timeline';
+				}
+						
 				if ( $navigation_item.value === 'time')
 				{
 					return_value = 'clock';
