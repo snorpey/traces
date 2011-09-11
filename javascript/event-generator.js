@@ -46,7 +46,7 @@ var EventGenerator = function()
 	{
 		var is_geodata = false;
 		
-		for (var i = 0; i < geodata_types.length; i++)
+		for ( var i = 0; i < geodata_types.length; i++)
 		{
 			if ( $data.type === geodata_types[i] )
 			{
@@ -75,7 +75,7 @@ var EventGenerator = function()
 	{
 		var is_text = false;
 		
-		for (var i = 0; i < text_types.length; i++)
+		for ( var i = 0; i < text_types.length; i++)
 		{
 			if ( $data.type === text_types[i] )
 			{

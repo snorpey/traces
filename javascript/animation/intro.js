@@ -35,7 +35,7 @@ _self.ANIMATED_IN.dispatch();
 		var recurse = true;
 		var timeout = 30;
 		
-		if( $character < $text[$paragraph].length )
+		if ( $character < $text[$paragraph].length )
 		{
 			$character++;
 		}
@@ -44,7 +44,7 @@ _self.ANIMATED_IN.dispatch();
 		{
 			$character = 0;
 			
-			if( $paragraph < $text.length - 1)
+			if ( $paragraph < $text.length - 1)
 			{
 				$paragraph++;
 				timeout += 1200;
@@ -57,7 +57,7 @@ _self.ANIMATED_IN.dispatch();
 			}
 		}
 		
-		if( recurse )
+		if ( recurse )
 		{
 			for ( var i = 0; i < $character; i++ )
 			{
@@ -66,7 +66,7 @@ _self.ANIMATED_IN.dispatch();
 			
 			$('#text p:eq(' + $paragraph + ')' ).text( text_insert );
 			
-			if( $('#text p:eq(' + $paragraph + ')' ).css('display') === 'none' )
+			if ( $('#text p:eq(' + $paragraph + ')' ).css('display') === 'none' )
 			{
 				$('#text p:eq(' + $paragraph + ')' ).fadeIn(100);
 			}

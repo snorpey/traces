@@ -49,7 +49,7 @@ var NavigationItem = function( $dom_object )
 	{		
 		if (
 			isSpecific( dom_object ) &&
-			isSpecificfor ( dom_object, $target )
+			isSpecificFor( dom_object, $target )
 		)
 		{
 			_self.activate();
@@ -62,13 +62,33 @@ var NavigationItem = function( $dom_object )
 	}
 	
 	function isSpecific( $dom_object )
-	{
-		return $dom_object.hasClass( 'specific' );
+	{		
+		var return_value = false;
+		
+		if(
+			$dom_object.hasClass( 'specific' ) ||
+			$dom_object.attr( 'href' ).indexOf( '-all' ) != -1
+		)
+		{
+			return_value = true;
+		}
+		
+		return return_value;
 	}
 	
-	function isSpecificfor ( $dom_object, $target )
+	function isSpecificFor( $dom_object, $target )
 	{	
-		return $dom_object.hasClass( $target.value + '-specific' );
+		var return_value = false;
+		
+		if(
+			$dom_object.hasClass( $target.value + '-specific' ) ||
+			$dom_object.attr( 'href' ).indexOf( '-all' ) != -1
+		)
+		{
+			return_value = true;
+		}
+		
+		return return_value;
 	}
 	
 	function getTarget( $event )

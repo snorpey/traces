@@ -244,7 +244,7 @@ var TargetSystem = function()
 			
 			if ( ! $target )
 			{
-				console.log( 'target system. targetPositions(): NO TARGET, YO' );
+				//console.log( 'target system. targetPositions(): NO TARGET, YO' );
 			}
 		}
 		
