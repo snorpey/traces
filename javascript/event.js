@@ -29,7 +29,7 @@ var Event = function( $data )
 	{
 		var return_value = false;
 		
-		if( data.location !== undefined )
+		if ( data.location !== undefined )
 		{
 			return_value = true;
 		}

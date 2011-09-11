@@ -25,9 +25,9 @@ var Timeline = function( $particles, $events )
 			
 			positions[i] = getParticlePosition( i, first_date, last_date );
 			
-			for( var j = 0; j < positions.length; j++ )
+			for ( var j = 0; j < positions.length; j++ )
 			{
-				if( 
+				if ( 
 					Math.abs( positions[j].x - positions[i].x ) <= 4 &&
 					j !== i
 				)
@@ -59,7 +59,6 @@ var Timeline = function( $particles, $events )
 	{
 		var position = { x: 0, y: screen.height / 2 };
 				
-		//console.log( event[$particle_index].getDate() );
 		position.x = mapRange(
 			Math.round( events[$particle_index].getDate().getTime() / 1000 ),
 			Math.round( $first_date.getTime() / 1000 ),
@@ -75,9 +74,9 @@ var Timeline = function( $particles, $events )
 	{
 		var first_date = new Date();
 		
-		for( var i = 0; i < $events.length; i++ )
+		for ( var i = 0; i < $events.length; i++ )
 		{
-			if( $events[i].getDate() < first_date )
+			if ( $events[i].getDate() < first_date )
 			{
 				first_date = $events[i].getDate();
 			}
@@ -90,9 +89,9 @@ var Timeline = function( $particles, $events )
 	{
 		var last_date = new Date( 1900, 0, 1 );
 		
-		for( var i = 0; i < $events.length; i++ )
+		for ( var i = 0; i < $events.length; i++ )
 		{
-			if( $events[i].getDate() > last_date )
+			if ( $events[i].getDate() > last_date )
 			{
 				last_date = $events[i].getDate();
 			}

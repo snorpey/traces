@@ -32,7 +32,7 @@ var Particle = function( $position, $index )
 		fade();
 		
 		//if this has a lifespan, move towards 0
-		if( _self.has_lifespan )
+		if ( _self.has_lifespan )
 		{
 			lifespan -= death_rate;
 		}
@@ -98,12 +98,12 @@ var Particle = function( $position, $index )
 		var distance = position.distanceFrom( $force );
 		
 		// do nothing
-		if(distance > $radius && $radius != -1) return;
+		if (distance > $radius && $radius != -1) return;
 		
 		//Get Direction
 		var direction = position.subtract($force).toUnitVector();
 		
-		if($radius != -1)
+		if ($radius != -1)
 		{
 		//Get Scale
 			var pct = 1 - (distance / $radius);
@@ -128,7 +128,7 @@ var Particle = function( $position, $index )
 		var direction = position.subtract($force).toUnitVector();
 		var distance = position.distanceFrom($force);
 		
-		if(distance > $radius) return;
+		if (distance > $radius) return;
 		
 		//Scale
 		var pct = 1 - (distance / $radius);
@@ -140,7 +140,7 @@ var Particle = function( $position, $index )
 		acceleration = acceleration.add(new_force);
 		
 		//	apply force to other particle
-		if($particle)
+		if ($particle)
 		{
 			$particle.acceleration = $particle.acceleration.subtract(new_force);
 		}
@@ -158,7 +158,7 @@ var Particle = function( $position, $index )
 	
 	_self.getColor = function( $as_string )
 	{
-		if( $as_string )
+		if ( $as_string )
 		{
 			return 'rgba(' + color.r + ', ' + color.g + ', ' + color.b + ', ' + color.a + ')';  
 		}
@@ -171,9 +171,9 @@ var Particle = function( $position, $index )
 	
 	function fade()
 	{
-		if( ! visibility && color.a > 0 )
+		if ( ! visibility && color.a > 0 )
 		{
-			if( color.a < 0.02)
+			if ( color.a < 0.02)
 			{
 				color.a = 0;
 			}
@@ -184,9 +184,9 @@ var Particle = function( $position, $index )
 			}
 		}
 		
-		if( visibility && color.a < 1 )
+		if ( visibility && color.a < 1 )
 		{
-			if( color.a > 0.98)
+			if ( color.a > 0.98)
 			{
 				color.a = 1;
 			}

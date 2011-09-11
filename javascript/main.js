@@ -43,6 +43,7 @@ $(document).ready(
 			intro.ANIMATED_IN.add( navigation.init );
 			intro.ANIMATED_IN.add( particle_system.init );
 						
+			navigation.NAVIGATED.add( target_system.navigated );
 			navigation.NAVIGATED.add( particle_system.navigated );
 			navigation.NAVIGATED.add( event_system.navigated );
 			
@@ -50,15 +51,16 @@ $(document).ready(
 			//navigation.OUTED.add( event_system.navigated );
 			
 			particle_system.PARTICLES_UPDATED.add( target_system.particlesUpdated );
+			//particle_system.FILTER_UPDATED.add(  );
 			
 			event_system.EVENTS_UPDATED.add( particle_system.eventsUpdated );
 			event_system.EVENTS_FILTERED.add( particle_system.eventsFiltered );
 			event_system.EVENTS_UPDATED.add( target_system.eventsUpdated );
-			event_system.EVENTS_FILTERED.add( target_system.eventsUpdated );
+			event_system.EVENTS_FILTERED.add( target_system.eventsFiltered );
 			
 			target_system.TARGETS_UPDATED.add( particle_system.targetsUpdated );
 			
-			for( var i = 0; i < navigation.getNavigationItems().length; i++ )
+			for ( var i = 0; i < navigation.getNavigationItems().length; i++ )
 			{
 				navigation.getNavigationItems()[i].CLICKED.add( navigation.navigate );
 				navigation.getNavigationItems()[i].HOVERED.add( target_system.hovered );

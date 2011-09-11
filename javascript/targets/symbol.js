@@ -22,7 +22,7 @@ var Symbol = function( $particles, $events, $symbol_name )
 	{		
 		var positions = [];
 		
-		for( var i = 0; i < particles.length; i++ )
+		for ( var i = 0; i < particles.length; i++ )
 		{
 			var particle = particles[i];
 		
@@ -37,7 +37,6 @@ var Symbol = function( $particles, $events, $symbol_name )
 	_self.particlesUpdate = function( $particles )
 	{
 		particles = $particles;
-		//-->parent: upadate.
 	}
 	
 	_self.eventsUpdate = function( $events )
@@ -59,7 +58,7 @@ var Symbol = function( $particles, $events, $symbol_name )
 		{
 			var point = $symbol.points[i];
 			
-			if( i < $symbol.points.length - 1 )
+			if ( i < $symbol.points.length - 1 )
 			{
 				path_length += dist( $symbol.points[i], $symbol.points[parseInt( i + 1 )] );
 			}
@@ -84,7 +83,7 @@ var Symbol = function( $particles, $events, $symbol_name )
 		
 		function getPathSegment( $path_segment )
 		{		
-			if( $path_segment < $path.points.length - 1 )
+			if ( $path_segment < $path.points.length - 1 )
 			{
 				if ( path_segment_distance < distance_on_path )
 				{			
@@ -97,7 +96,7 @@ var Symbol = function( $particles, $events, $symbol_name )
 				{
 					var path_segment_index = $path_segment - 1;
 					
-					if( $path_segment === 0 )
+					if ( $path_segment === 0 )
 					{
 						path_segment_index = 0;
 					}
@@ -295,7 +294,7 @@ var Symbol = function( $particles, $events, $symbol_name )
 		{
 			data[i].size = getSymbolSize( data[i].points );
 			
-			if( $scale )
+			if ( $scale )
 			{
 				data[i].points = symbolScale( data[i].points, ( 300 / data[i].size.height ) );
 				data[i].size = getSymbolSize( data[i].points );
@@ -311,7 +310,7 @@ var Symbol = function( $particles, $events, $symbol_name )
 		
 		for ( var i = 0; i < symbol_data.length; i++ )
 		{	
-			if( symbol_data[i].name === $name )
+			if ( symbol_data[i].name === $name )
 			{
 				return_value = symbol_data[i];
 				break;
@@ -325,14 +324,14 @@ var Symbol = function( $particles, $events, $symbol_name )
 	{
 		var size = { width: 0, height: 0 };
 		
-		for( var i = 0; i < $points.length; i++ )
+		for ( var i = 0; i < $points.length; i++ )
 		{
-			if( $points[i].x > size.width )
+			if ( $points[i].x > size.width )
 			{
 				size.width = $points[i].x;
 			}
 			
-			if( $points[i].y > size.height )
+			if ( $points[i].y > size.height )
 			{
 				size.height = $points[i].y;
 			}
@@ -345,7 +344,7 @@ var Symbol = function( $particles, $events, $symbol_name )
 	{		
 		var new_positions = [];
 		
-		for( var i = 0; i < $points.length; i++ )
+		for ( var i = 0; i < $points.length; i++ )
 		{
 			new_positions[i] =  { x: $points[i].x * $scale, y: $points[i].y * $scale };
 		}
@@ -359,7 +358,7 @@ var Symbol = function( $particles, $events, $symbol_name )
 		var top = ( screen.height - $symbol.size.height ) / 2;
 		var positions = $positions;
 		
-		if( $symbol.size )
+		if ( $symbol.size )
 		{
 			for ( var i = 0; i < positions.length; i++ )
 			{

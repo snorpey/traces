@@ -23,7 +23,7 @@ _self.ANIMATED_IN.dispatch();
 	{
 		$dom_element.text( '' );
 		
-		for( var i = 0; i < $text.length; i++ )
+		for ( var i = 0; i < $text.length; i++ )
 		{
 			$dom_element.append( '<span>' + $text[i] + '</span>' );
 		}
@@ -35,7 +35,7 @@ _self.ANIMATED_IN.dispatch();
 	
 	function characterAnimateIn( $dom_element, $text, $index )
 	{		
-		if( $index < $text.length - 1 )
+		if ( $index < $text.length - 1 )
 		{
 			$dom_element
 				.find( 'span:eq(' + $index + ')' )

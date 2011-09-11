@@ -50,9 +50,9 @@ var List = function( $particles, $events )
 			
 			positions[i] = getParticlePosition( i, first_date, last_date );
 			
-			for( var j = 0; j < positions.length; j++ )
+			for ( var j = 0; j < positions.length; j++ )
 			{
-				if( 
+				if ( 
 					Math.abs( positions[j].x - positions[i].x ) <= 4 &&
 					j !== i
 				)
@@ -73,7 +73,7 @@ var List = function( $particles, $events )
 		var distance = parseInt( (screen.height - 200) / keys.length );
 		var labels = [];
 		
-		for( var i = 0; i < values.length; i++ )
+		for ( var i = 0; i < values.length; i++ )
 		{
 			var position = {};
 				position.x = 200;
@@ -100,27 +100,27 @@ var List = function( $particles, $events )
 	{
 		var keys = [];
 		
-		if( $filter === 'all' )
+		if ( $filter === 'all' )
 		{
 			keys = [ 'type' ];
 		}
 		
-		if( $filter === 'location' )
+		if ( $filter === 'location' )
 		{
 			keys = [ 'location', 'type' ];
 		}
 		
-		if( $filter === 'music' )
+		if ( $filter === 'music' )
 		{
 			keys = [ 'music', 'artist' ];
 		}
 		
-		if( $filter === 'photo' )
+		if ( $filter === 'photo' )
 		{
 			keys = [ 'photo', 'tags' ];
 		}
 		
-		if( $filter === 'game' )
+		if ( $filter === 'game' )
 		{
 			keys = [ 'game', 'title' ];
 		}
@@ -132,28 +132,28 @@ var List = function( $particles, $events )
 	{
 		var values = [];
 		
-		for( var i = 0; i < $events.length; i++ )
+		for ( var i = 0; i < $events.length; i++ )
 		{
 			var key = $events[i];
 			
-			for( var j = 0; j < $keys.length; j++ )
+			for ( var j = 0; j < $keys.length; j++ )
 			{
-				if( key[$keys[j]] )
+				if ( key[$keys[j]] )
 				{
 					key = key[$keys[j]];
 					
 					var value_add = true;
 					
-					for( var k = 0; k < values.length; k++ )
+					for ( var k = 0; k < values.length; k++ )
 					{
-						if( key === values[k] )
+						if ( key === values[k] )
 						{
 							value_add = false;
 							break;
 						}
 					}
 					
-					if( value_add )
+					if ( value_add )
 					{
 						values.push( key );
 					}
@@ -168,7 +168,6 @@ var List = function( $particles, $events )
 	{
 		var position = { x: 0, y: screen.height / 2 };
 				
-		//console.log( event[$particle_index].getDate() );
 		position.x = mapRange(
 			Math.round( events[$particle_index].getDate().getTime() / 1000 ),
 			Math.round( $first_date.getTime() / 1000 ),

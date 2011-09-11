@@ -22,35 +22,35 @@ var EventSystem = function()
 	
 	_self.navigated = function( $target )
 	{
-		if( $target.action === 'filter' )
+		if ( $target.action === 'filter' )
 		{
 			var events_visible = [];
 			
-			for( var i = 0; i < events.length; i++ )
+			for ( var i = 0; i < events.length; i++ )
 			{
-				if( $target.value !== 'all' )
+				if ( $target.value !== 'all' )
 				{
-					if( events[i].getType() === $target.value )
+					if ( events[i].getType() === $target.value )
 					{
-						events_visible.push( { visible: true } );
+						events_visible[i] = { visible: true };
 					}
 					
 					else
 					{
-						events_visible.push( { visible: false } );
+						events_visible[i] = { visible: false };
 					}
 				}
 				
 				else
 				{
-					events_visible.push( i );
+					events_visible[i] = { visible: true };
 				}
 			}
 			
 			_self.EVENTS_FILTERED.dispatch( events_visible );
 		}
 		
-		if( $target.action === 'order' )
+		if ( $target.action === 'order' )
 		{
 	
 		}
@@ -58,7 +58,7 @@ var EventSystem = function()
 	
 	function eventsGenerate( $datasets )
 	{		
-		if( events.length < $datasets )
+		if ( events.length < $datasets )
 		{			
 			var event = event_generator.generateRandom()
 			
@@ -72,7 +72,7 @@ var EventSystem = function()
 		
 	function timer( $callback, $max )
 	{
-		if( ! $max )
+		if ( ! $max )
 		{
 			$max = 100;
 		}

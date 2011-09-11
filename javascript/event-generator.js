@@ -46,22 +46,22 @@ var EventGenerator = function()
 	{
 		var is_geodata = false;
 		
-		for(var i = 0; i < geodata_types.length; i++)
+		for (var i = 0; i < geodata_types.length; i++)
 		{
-			if( $data.type === geodata_types[i] )
+			if ( $data.type === geodata_types[i] )
 			{
 				is_geodata = true;
 				break;
 			}
 		}
 		
-		if( is_geodata )
+		if ( is_geodata )
 		{
 			$data.location = {};
 			$data.location.lat = randomNumber( -90, 90 );
 			$data.location.lng = randomNumber( 0, 180 );
 			
-			if( $data.type === 'location' )
+			if ( $data.type === 'location' )
 			{
 				var location_types = [ 'bar', 'work', 'restaurant', 'public transport' ];
 				$data.location.type = location_types[parseInt( (location_types.length - 1) * Math.random() )];
@@ -75,16 +75,16 @@ var EventGenerator = function()
 	{
 		var is_text = false;
 		
-		for(var i = 0; i < text_types.length; i++)
+		for (var i = 0; i < text_types.length; i++)
 		{
-			if( $data.type === text_types[i] )
+			if ( $data.type === text_types[i] )
 			{
 				is_text = true;
 				break;
 			}
 		}
 		
-		if( is_text )
+		if ( is_text )
 		{
 			$data.text = {};
 			$data.text.message = 'this is a random message'
@@ -97,7 +97,7 @@ var EventGenerator = function()
 	
 	function getGame( $data )
 	{	
-		if( $data.type === 'game' )
+		if ( $data.type === 'game' )
 		{
 			$data.game = {};
 			$data.game.title = game_titles[parseInt( (game_titles.length - 1) * Math.random() )];
@@ -130,9 +130,7 @@ var EventGenerator = function()
 		}
 		
 		var date = new Date( $from + Math.random() * ($to - $from) );
-		
-		//console.log( Math.round( date.getTime() / 1000 ) );
-		
+				
 		return date;
 	}
 	
@@ -140,7 +138,7 @@ var EventGenerator = function()
 	{
 		var return_value = $min + ( Math.random() * ( $max - $min ) );
 		
-		if( $digits === undefined )
+		if ( $digits === undefined )
 		{
 			Math.round( return_value );
 		}

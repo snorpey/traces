@@ -59,7 +59,7 @@ _self.ANIMATED_IN.dispatch();
 		
 		if( recurse )
 		{
-			for( var i = 0; i < $character; i++ )
+			for ( var i = 0; i < $character; i++ )
 			{
 				text_insert += $text[$paragraph][i];
 			}

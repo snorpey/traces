@@ -36,8 +36,15 @@ var ParticleSystem = function()
 	
 	_self.navigated = function( $target )
 	{				
-		
-		//updateParticleTargets( $target );
+		if (
+			$target &&
+			$target.action === 'filter'
+		)
+		{	
+			// prolly messy, maybe change signal orders?
+
+			//setTimeout( function(){ _self.PARTICLES_UPDATED.dispatch( particlesGetVisible() ); }, 30 );
+		}
 	}
 	
 	_self.run = function()
@@ -45,7 +52,7 @@ var ParticleSystem = function()
 		requestAnimFrame( _self.run );
 		update();
 		
-		//if( particlesMoving() )
+		//if ( particlesMoving() )
 		//{
 			draw();
 		//}		
@@ -56,7 +63,7 @@ var ParticleSystem = function()
 		// set particle position
 		// this is where the cool shit is supposed to happen. (I guess)
 		
-		for(var i = 0; i < particles.length; i++)
+		for ( var i = 0; i < particles.length; i++ )
 		{
 			particles[i].update();
 		}
@@ -92,16 +99,14 @@ var ParticleSystem = function()
 	//	draw particles on the canvas
 	function draw()
 	{
-		//console.log( particles.length );
 		//clear background
 		//ctx.fillStyle = 'rgba(255, 255, 255, 0.79)';
 		//ctx.fillRect(0, 0, screen.width, screen.height);
 		
-		//console.log( particles[0].getPosition().x )
 		
 		ctx.clearRect(0, 0, screen.width, screen.height);
 		
-		/*if( map.getActive() )
+		/*if ( map.getActive() )
 		{
 			var image = new Image();
             	image.src = 'images/world-map.png';
@@ -119,14 +124,17 @@ var ParticleSystem = function()
 		//draw particles
 		var i = particles.length;
 
-		while( i-- )
+		while ( i-- )
 		{
-			if( particles[i].getColor().a !== 0 )
+			if (
+			//	particles[i].getColor().a !== 0 &&
+				particles[i].getVisibility() === true
+			)
 			{
 				var px = ~~ ( particles[i].getPosition().x + 0.5 );
 				var py = ~~ ( particles[i].getPosition().y + 0.5 );
 	
-				ctx.fillStyle = particles[i].getColor( true );
+				ctx.fillStyle = particles[i].getColor();
 				ctx.beginPath();
 				ctx.arc( px, py, 1.5, 0, Math.PI * 2, true );
 				ctx.closePath();
@@ -137,13 +145,11 @@ var ParticleSystem = function()
 	
 	_self.eventsUpdated = function( $events )
 	{
-		//console.log( $events );
-		
 		events = $events;
 		
-		if( $events.length > particles.length )
+		if ( $events.length > particles.length )
 		{
-			for( var i = 0; i < $events.length - particles.length; i++ )
+			for ( var i = 0; i < $events.length - particles.length; i++ )
 			{
 				particleAdd( $events[particles.length + i] );
 			}
@@ -151,47 +157,51 @@ var ParticleSystem = function()
 	}
 	
 	_self.eventsFiltered = function( $events_visible )
-	{
-		if( $events_visible.length === particles.length )
+	{	
+		if ( $events_visible.length === particles.length )
 		{
-			for( var i = 0; i < $events_visible.length; i++ )
+			for ( var i = 0; i < $events_visible.length; i++ )
 			{
 				particles[i].setVisibility( $events_visible[i].visible );
 			}
 		}
 		
-		if( $events_visible.length > particles.length )
+		if ( $events_visible.length > particles.length )
 		{
-			for( var i = 0; i < particles.length; i++ )
+			for ( var i = 0; i < particles.length; i++ )
 			{
 				particles[i].setVisibility( $events_visible[i].visible );
 			}
 		}
 		
-		if( $events_visible.length < particles.length )
+		if ( $events_visible.length < particles.length )
 		{
-			for( var i = 0; i < $events_visible.length; i++ )
+			for ( var i = 0; i < $events_visible.length; i++ )
 			{
 				particles[i].setVisibility( $events_visible[i].visible );
 			}
 			
-			for( var i = $events_visible.length - 1; i < particles.length - $events_visible.length; i++ )
+			for ( var i = $events_visible.length - 1; i < particles.length - $events_visible.length; i++ )
 			{
 				particles[i].setVisibility( false );
 			}
 		}
+		
+		_self.PARTICLES_UPDATED.dispatch( particlesGetVisible() );
 	}
 	
 	_self.targetsUpdated = function( $targets )
 	{
-		if( _targets !== $targets)
+		var visible_particles = particlesGetVisible();
+		
+		if ( _targets !== $targets )
 		{
 			_targets = $targets;
 		}
 		
-		for(var i = 0; i < $targets.length; i++)
+		for (  var i = 0; i < $targets.length; i++)
 		{
-			particles[i].setTarget( $targets[i] );
+			visible_particles[i].setTarget( $targets[i] );
 		}
 	}
 	
@@ -210,7 +220,7 @@ var ParticleSystem = function()
 		//particles[index] = new Particle( particle_position, particle_index );
 		particles.push( new Particle( particle_position, particle_index ) );
 		
-		_self.PARTICLES_UPDATED.dispatch( particles );
+		_self.PARTICLES_UPDATED.dispatch( particlesGetVisible() );
 	}
 	
 	function particlesMoving()
@@ -219,9 +229,9 @@ var ParticleSystem = function()
 		
 		return_value = false;
 		
-		for( var i = 0; i < particles.length; i++ )
+		for ( var i = 0; i < particles.length; i++ )
 		{
-			if( particles[i].getMoving() )
+			if ( particles[i].getMoving() )
 			{
 				return_value = true;
 				break;
@@ -231,18 +241,33 @@ var ParticleSystem = function()
 		return return_value;
 	}
 	
+	function particlesGetVisible()
+	{
+		var particles_active = [];
+		
+		for ( var i = 0; i < particles.length; i++ )
+		{
+			if ( particles[i].getVisibility() )
+			{
+				particles_active.push( particles[i] );
+			}
+		}
+		
+		return particles_active;
+	}
+		
 	function filterEvents( $type )
 	{
-		for(var i = 0; i < events.length; i++)
+		for ( var i = 0; i < events.length; i++ )
 		{
-			if($type === 'all')
+			if ( $type === 'all' )
 			{
 				particles[i].setVisibility( true );
 			}
 			
 			else
 			{				
-				if(events[i].getType() === $type)
+				if ( events[i].getType() === $type )
 				{
 					particles[i].setVisibility( true );
 				}

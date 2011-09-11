@@ -35,7 +35,7 @@ var Particle = function( $position, $index )
 	
 	_self.setTarget = function( $target )
 	{
-		if( $target )
+		if ( $target )
 		{
 			target = $target;
 			has_target = true;
@@ -61,7 +61,7 @@ var Particle = function( $position, $index )
 		};
 	}
 		
-	_self.setPosition = function(x, y, z)
+	_self.setPosition = function( x, y, z )
 	{
 		position.setElements( [x, y, z] );
 	}
@@ -77,7 +77,7 @@ var Particle = function( $position, $index )
 	
 	_self.getColor = function()
 	{
-		return color;
+		return_value = color;
 	}
 	
 	_self.getMoving = function()
@@ -88,14 +88,21 @@ var Particle = function( $position, $index )
 	_self.setVisibility = function( $visible )
 	{
 		visible = $visible;
+		
+		fade();
+	}
+	
+	_self.getVisibility = function()
+	{
+		return visible;
 	}
 	
 	_self.update = function()
 	{		
 		
-		if( has_target )
+		if ( has_target )
 		{						
-			if( position.distanceFrom( Vector.create( [target.x, target.y, 0] ) ) > 0.2 )
+			if ( position.distanceFrom( Vector.create( [target.x, target.y, 0] ) ) > 0.2 )
 			{
 				
 				is_moving = true;
@@ -124,6 +131,16 @@ var Particle = function( $position, $index )
 		fade();
 	}
 	
+	/*_self.updateFilter( $filter )
+	{
+		if (
+			$filter  
+		)
+		{
+			
+		}
+	}*/
+	
 	function draw()
 	{
 		// draw particle
@@ -144,7 +161,7 @@ var Particle = function( $position, $index )
 	{
 		var distance = position.distanceFrom( $force );
 		
-		if(
+		if (
 			distance > $radius &&
 			$radius != -1
 		)
@@ -155,7 +172,7 @@ var Particle = function( $position, $index )
 		//Get Direction
 		var direction = position.subtract( $force ).toUnitVector();
 		
-		if( $radius != -1 )
+		if ( $radius != -1 )
 		{
 			//Get Scale
 			var pct = 1 - ( distance / $radius );
@@ -175,12 +192,12 @@ var Particle = function( $position, $index )
 	
 	function fade()
 	{
-		if(
+		if (
 			! visible &&
 			color.a > 0
 		)
 		{
-			if( color.a < 0.02)
+			if ( color.a < 0.02)
 			{
 				color.a = 0;
 			}
@@ -191,12 +208,12 @@ var Particle = function( $position, $index )
 			}
 		}
 		
-		if(
+		if (
 			visible &&
 			color.a < 1
 		)
 		{
-			if( color.a > 0.98)
+			if ( color.a > 0.98)
 			{
 				color.a = 1;
 			}

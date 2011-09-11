@@ -21,16 +21,20 @@ var TargetSystem = function()
 	}
 	
 	_self.navigated = function( $navigation_item )
-	{
-		if(
+	{	
+		if (
 			$navigation_item.action === 'filter' && 
 			$navigation_item.value !== undefined
 		)
 		{
-			//filterEvents( $target.value );
+//			if ( navigationToTarget( $navigation_item ) )
+//			{
+				_self.TARGETS_UPDATED.dispatch( targetPositions( navigationToTarget( $navigation_item ) ) );
+//			}
+//			filterEvents( $target.value );
 		}
 		
-		if(
+		if (
 			$navigation_item.action === 'orderby' && 
 			$navigation_item.value !== undefined
 		)
@@ -38,15 +42,15 @@ var TargetSystem = function()
 			//orderEventsBy( $target.value );
 		}
 		
-		if( navigationToTarget( $navigation_item ) )
-		{
-			_self.TARGETS_UPDATED.dispatch( targetPositions( navigationToTarget( $navigation_item ) ) );
-		}
+		//if ( navigationToTarget( $navigation_item ) )
+		//{
+		//	_self.TARGETS_UPDATED.dispatch( targetPositions( navigationToTarget( $navigation_item ) ) );
+		//}
 	}
 	
 	_self.hovered = function( $navigation_item )
 	{	
-		if( navigationToTarget( $navigation_item ) )
+		if ( navigationToTarget( $navigation_item ) )
 		{
 			_self.TARGETS_UPDATED.dispatch( targetPositions( navigationToTarget( $navigation_item ) ) );
 		}
@@ -54,7 +58,7 @@ var TargetSystem = function()
 	
 	_self.outed = function( $navigation_item )
 	{
-		if( navigationToTarget( $navigation_item ) )
+		if ( navigationToTarget( $navigation_item ) )
 		{
 			_self.TARGETS_UPDATED.dispatch( targetPositions( navigationToTarget( $navigation_item ) ) );
 		}
@@ -68,7 +72,7 @@ var TargetSystem = function()
 		
 		for ( var target in targets )
 		{		
-			if( target !== 'symbols' )
+			if ( target !== 'symbols' )
 			{
 				targets[target].particlesUpdate( $particles );		
 			}
@@ -82,7 +86,7 @@ var TargetSystem = function()
 			}
 		}
 		
-		if( navigation_item )
+		if ( navigation_item )
 		{
 			_self.TARGETS_UPDATED.dispatch( targetPositions( navigationToTarget( navigation_item ) ) );
 		}
@@ -96,7 +100,7 @@ var TargetSystem = function()
 		
 		for ( var target in targets )
 		{
-			if( target !== 'symbols' )
+			if ( target !== 'symbols' )
 			{
 				targets[target].eventsUpdate( $events );		
 			}
@@ -110,10 +114,15 @@ var TargetSystem = function()
 			}
 		}
 		
-		if( navigation_item )
+		if ( navigation_item )
 		{
 			_self.TARGETS_UPDATED.dispatch( targetPositions( navigationToTarget( navigation_item ) ) );
 		}
+	}
+	
+	_self.eventsFiltered = function( $events_visible )
+	{
+
 	}
 	
 	_self.screenUpdated = function( $screen )
@@ -122,7 +131,7 @@ var TargetSystem = function()
 		
 		for ( var target in targets )
 		{
-			if( target !== 'symbols' )
+			if ( target !== 'symbols' )
 			{
 				targets[target].screenUpdate( $screen );		
 			}
@@ -141,23 +150,34 @@ var TargetSystem = function()
 	
 	function navigationToTarget( $navigation_item )
 	{
-		// return VECTOR
 		return_value = false;
 		
-		if(
+		if (
 			$navigation_item &&
-			$navigation_item.type !== 'mouseenter' &&
-			$navigation_item.type !== 'mouseleave'
+			$navigation_item.type == 'click'
 		)
 		{
-			if( $navigation_item.action === 'filter' )
+			if ( $navigation_item.action === 'filter' )
 			{
-				//return targets.timeline.getPositions;
+				if ( $navigation_item.value === 'game' )
+				{
+					return_value = 'symbol.game';
+				}
+				
+				if ( $navigation_item.value === 'location' )
+				{	
+					return_value = 'symbol.location';
+				}
+				
+				if ( $navigation_item.value === 'music' )
+				{	
+					return_value = 'symbol.music';
+				}
 			}
 			
-			if( $navigation_item.action === 'orderby' )
+			if ( $navigation_item.action === 'orderby' )
 			{
-				if( $navigation_item.value === 'time')
+				if ( $navigation_item.value === 'time')
 				{
 					return_value = 'clock';
 				}
@@ -166,21 +186,24 @@ var TargetSystem = function()
 		
 		else
 		{
-			if( $navigation_item.type === 'mouseenter' )
+			if (
+				$navigation_item.type &&
+				$navigation_item.type === 'mouseenter'
+			)
 			{	
-				if( $navigation_item.action === 'filter' )
+				if ( $navigation_item.action === 'filter' )
 				{
-					if( $navigation_item.value === 'game' )
+					if ( $navigation_item.value === 'game' )
 					{
 						return_value = 'symbol.game';
 					}
 					
-					if( $navigation_item.value === 'location' )
+					if ( $navigation_item.value === 'location' )
 					{	
 						return_value = 'symbol.location';
 					}
 					
-					if( $navigation_item.value === 'music' )
+					if ( $navigation_item.value === 'music' )
 					{	
 						return_value = 'symbol.music';
 					}
@@ -188,7 +211,7 @@ var TargetSystem = function()
 			}
 		}
 		
-		if( return_value )
+		if ( return_value )
 		{
 			navigation_item = $navigation_item;
 		}
@@ -200,7 +223,7 @@ var TargetSystem = function()
 	{
 		var return_value = [];
 		
-		if(
+		if (
 			$target &&
 			targets[$target]
 		)
@@ -210,13 +233,18 @@ var TargetSystem = function()
 		
 		else
 		{			
-			if(
+			if (
 				$target &&
 				$target.indexOf( 'symbol.' ) !== -1 &&
 				targets.symbols[ $target.replace( 'symbol.', '' ) ] !== undefined
 			)
 			{
 				return_value = targets.symbols[ $target.replace( 'symbol.', '' ) ].getPositions();
+			}
+			
+			if ( ! $target )
+			{
+				console.log( 'target system. targetPositions(): NO TARGET, YO' );
 			}
 		}
 		
@@ -225,41 +253,41 @@ var TargetSystem = function()
 	
 	function targetsCreate()
 	{
-		if( 
+		if ( 
 			particles.length &&
 			events.length
 		)
 		{
-			if( targets.timeline === undefined )
+			if ( targets.timeline === undefined )
 			{
 				targets.timeline = new Timeline( particles, events );
 			}
 			
-			if( targets.clock === undefined )
+			if ( targets.clock === undefined )
 			{
 				targets.clock = new Clock( particles, events );
 			}
 			
-			if( targets.map === undefined )
+			if ( targets.map === undefined )
 			{
 				targets.map = new Map( particles, events );
 			}
 			
-			if( targets.symbols === undefined )
+			if ( targets.symbols === undefined )
 			{
 				targets.symbols = {};
 				
-				if( targets.symbols.game === undefined )
+				if ( targets.symbols.game === undefined )
 				{
 					targets.symbols.game = new Symbol( particles, events, 'game' );
 				}
 				
-				if( targets.symbols.location === undefined )
+				if ( targets.symbols.location === undefined )
 				{
 					targets.symbols.location = new Symbol( particles, events, 'location' );
 				}
 				
-				if( targets.symbols.music === undefined )
+				if ( targets.symbols.music === undefined )
 				{
 					targets.symbols.music = new Symbol( particles, events, 'music' );
 				}
@@ -268,7 +296,7 @@ var TargetSystem = function()
 		
 		for ( var target in targets )
 		{
-			if( target !== 'symbols' )
+			if ( target !== 'symbols' )
 			{
 				targets[target].screenUpdate( screen );		
 			}

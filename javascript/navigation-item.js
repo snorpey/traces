@@ -19,7 +19,7 @@ var NavigationItem = function( $dom_object )
 		dom_object.click( click );
 		dom_object.hover( hover, out );
 		
-		if( isSpecific( dom_object ) )
+		if ( isSpecific( dom_object ) )
 		{
 			dom_object.hide();
 		}
@@ -44,11 +44,12 @@ var NavigationItem = function( $dom_object )
 		activeUpdate();
 	}
 	
+	// show specific nav items for target
 	_self.showSpecificFor = function( $target )
 	{		
-		if(
+		if (
 			isSpecific( dom_object ) &&
-			isSpecificFor( dom_object, $target )
+			isSpecificfor ( dom_object, $target )
 		)
 		{
 			_self.activate();
@@ -62,20 +63,20 @@ var NavigationItem = function( $dom_object )
 	
 	function isSpecific( $dom_object )
 	{
-		return $dom_object.hasClass('specific');
+		return $dom_object.hasClass( 'specific' );
 	}
 	
-	function isSpecificFor( $dom_object, $target )
+	function isSpecificfor ( $dom_object, $target )
 	{	
-		return $dom_object.hasClass($target.value + '-specific');
+		return $dom_object.hasClass( $target.value + '-specific' );
 	}
 	
 	function getTarget( $event )
 	{
-		var navigation_keys = dom_object.attr('href').replace('#', '').split('-');		
+		var navigation_keys = dom_object.attr( 'href' ).replace( '#', '' ).split( '-' );		
 		var return_value = false;
 		
-		if( navigation_keys.length > 1 )
+		if ( navigation_keys.length > 1 )
 		{
 			return_value = { action: navigation_keys[0], value: navigation_keys[1], type: $event.type };
 		}
@@ -85,23 +86,23 @@ var NavigationItem = function( $dom_object )
 	
 	function activeUpdate()
 	{
-		if( dom_object )
+		if ( dom_object )
 		{		
-			if( 
+			if ( 
 				active &&
-				! $dom_object.hasClass('active')
+				! $dom_object.hasClass( 'active' )
 			)
 			{
-				dom_object.addClass('active');
+				dom_object.addClass( 'active' );
 				dom_object.show();
 			}
 			
-			if(
+			if (
 				! active &&
-				dom_object.hasClass('active')
+				dom_object.hasClass( 'active' )
 			)
 			{
-				dom_object.removeClass('active');
+				dom_object.removeClass( 'active' );
 				dom_object.hide();
 			}
 		}

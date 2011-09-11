@@ -26,15 +26,12 @@ var Navigation = function()
 	}
 	
 	_self.navigate = function( $target )
-	{
-		//console.log( $target )
-		
-		for( var i = 0; i < navigation_items.length; i++ )
+	{		
+		for ( var i = 0; i < navigation_items.length; i++ )
 		{
-			//console.log( navigation_items[i] );
 			navigation_items[i].showSpecificFor( $target )
 		}
-		
+
 		_self.NAVIGATED.dispatch( $target );
 	}
 	

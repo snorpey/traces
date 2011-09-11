@@ -17,9 +17,9 @@ var Map = function( $particles, $events )
 	{	
 		var positions = [];
 		
-		for( var i = 0; i < events.length; i++ )
+		for ( var i = 0; i < events.length; i++ )
 		{
-			if( events[i].hasLocation() )
+			if ( events[i].hasLocation() )
 			{
 				positions[i] = getPosition( i, events[i] );
 			}
@@ -53,7 +53,7 @@ var Map = function( $particles, $events )
 		var position = { x: 0, y: 0 };
 			position.x = mapRange( event.getLocation().lng, -180, 180, 0, screen.width );
                      
-		if( event.getLocation().lat >= 0 )
+		if ( event.getLocation().lat >= 0 )
 		{
 			position.y = mapRange( event.getLocation().lat, 0, 90, screen.height / 2, 0 );
 		}

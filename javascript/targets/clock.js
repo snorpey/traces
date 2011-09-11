@@ -27,9 +27,9 @@ var Clock = function( $particles, $events )
 			//getPositionOnCircle( $index, $center, $radius, $point_count )
 			//position[i] = positions_on_circle[hour];
 			
-			for( var j = 0; j < events.length; j++ )
+			for ( var j = 0; j < events.length; j++ )
 			{
-				if(
+				if (
 					hour === events[j].getDate().getHours() &&
 					i !== j
 				)
