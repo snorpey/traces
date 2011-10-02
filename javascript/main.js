@@ -76,6 +76,7 @@ $(document).ready(
 			var screen = { width: $( window ).width(), height: $( window ).height() };
 			
 			$( '#canvas' ).attr( screen );
+			$( '#text' ).css( { top: ( screen.height - $( '#text' ).height() ) / 2 } );
 			
 			SCREEN_UPDATED.dispatch( screen );
 		}

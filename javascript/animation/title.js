@@ -15,8 +15,9 @@ var Title = function( )
 	_self.init = function()
 	{		
 		var text = $( 'h1' ).text().split( '' );
+//for testing.
 _self.ANIMATED_IN.dispatch();
-		setTimeout( function() { titleAnimateIn( $( 'h1' ), text ); }, 700 );
+//		setTimeout( function() { titleAnimateIn( $( 'h1' ), text ); }, 700 );
 	}
 	
 	function titleAnimateIn( $dom_element, $text )
@@ -46,7 +47,8 @@ _self.ANIMATED_IN.dispatch();
 		
 		else
 		{
-			setTimeout( function() { /*_self.ANIMATED_IN.dispatch();*/ }, 1000 );
+			$( 'body' ).css( { 'background-color': 'rgba( 60, 60, 60, 1 )' } );
+			//setTimeout( function() { _self.ANIMATED_IN.dispatch(); }, 1000 );
 		}
 	}
 }
