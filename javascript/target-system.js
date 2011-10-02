@@ -183,12 +183,17 @@ var TargetSystem = function()
 					return_value = 'timeline';
 				}
 						
-				if ( $navigation_item.value === 'time')
+				if ( $navigation_item.value === 'time' )
 				{
 					return_value = 'clock';
 				}
 				
-				if ( $navigation_item.value === 'location')
+				if ( $navigation_item.value === 'game' )
+				{
+					return_value = 'gametitles';
+				}
+				
+				if ( $navigation_item.value === 'location' )
 				{
 					//console.log(  )
 					return_value = 'map';
@@ -199,6 +204,7 @@ var TargetSystem = function()
 		else
 		{
 			if (
+				$navigation_item &&
 				$navigation_item.type &&
 				$navigation_item.type === 'mouseenter'
 			)
@@ -283,6 +289,11 @@ var TargetSystem = function()
 			if ( targets.map === undefined )
 			{
 				targets.map = new Map( particles, events );
+			}
+			
+			if ( targets.gametitles === undefined )
+			{
+				targets.gametitles = new GameTitles( particles, events );
 			}
 			
 			if ( targets.symbols === undefined )

@@ -50,7 +50,7 @@ var Map = function( $particles, $events )
 	
 	function getPosition( $index, $event )
 	{
-		var position = { x: 0, y: 0 };
+		var position = { x: parseInt( screen.width / 2 ), y: parseInt( screen.height / 2 ) };
 		
 		if( $event.hasLocation() )
 		{	
