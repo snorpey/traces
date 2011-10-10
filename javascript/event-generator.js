@@ -26,6 +26,11 @@ var EventGenerator = function()
 		return event;
 	}
 	
+	_self.getGameTitles = function()
+	{
+		return game_titles;
+	}
+	
 	function generateEvent( $type )
 	{
 		var data = {};
@@ -64,7 +69,7 @@ var EventGenerator = function()
 			if ( $data.type === 'location' )
 			{
 				var location_types = [ 'bar', 'work', 'restaurant', 'public transport' ];
-				$data.location.type = location_types[parseInt( (location_types.length - 1) * Math.random() )];
+				$data.location.type = location_types[parseInt( ( location_types.length - 1 ) * Math.random() )];
 			}	
 		}
 		
@@ -88,8 +93,8 @@ var EventGenerator = function()
 		{
 			$data.text = {};
 			$data.text.message = 'this is a random message'
-			$data.text.url = text_urls[parseInt( (text_urls.length - 1) * Math.random() )];
-			$data.text.mention = text_mentions[parseInt( (text_mentions.length - 1) * Math.random() )];
+			$data.text.url = text_urls[parseInt( ( text_urls.length - 1 ) * Math.random() )];
+			$data.text.mention = text_mentions[parseInt( ( text_mentions.length - 1 ) * Math.random() )];
 		}
 		
 		return $data;
@@ -100,8 +105,8 @@ var EventGenerator = function()
 		if ( $data.type === 'game' )
 		{
 			$data.game = {};
-			$data.game.title = game_titles[parseInt( (game_titles.length - 1) * Math.random() )];
-			$data.game.trophy = game_trophies[parseInt( (game_trophies.length - 1) * Math.random() )];
+			$data.game.title = game_titles[parseInt( ( game_titles.length - 1 ) * Math.random() )];
+			$data.game.trophy = game_trophies[parseInt( ( game_trophies.length - 1 ) * Math.random() )];
 		}
 		
 		return $data;

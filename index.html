@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta charset="utf-8" />
 		<title>personal stats</title>
 		<link rel="stylesheet" href="css/stylesheet.css" />
 	</head>
 	<body>
 		<div id="text">
 			<h1>traces.</h1>
-			<p>wherever you go on the internet, you leave traces.</p>
-			<p>these are mine.</p>
+			<p>wherever you go on the internet, you leave traces. these are mine.</p>
 			<nav>
 				show
 				<span>
@@ -20,6 +20,24 @@
 					<a href="#filter-text">texts</a> /
 					<a href="#filter-code">code</a>
 				</span> 
+
+				ordered by
+				<span> 
+					<a href="#orderby-date">date</a> /														<!-- X timeline -->
+					<a href="#orderby-time">time</a> 														<!-- X clock -->
+					<a href="#orderby-pie" 			class="specific all-specific"		>type</a> /			<!-- pie charts-->
+					<a href="#orderby-location" 	class="specific location-specific"	>location</a> /		<!-- X map -->
+					<a href="#orderby-game" 		class="specific game-specific"		>game</a> /			<!-- like twitter client view--> 
+					<a href="#orderby-artist" 		class="specific music-specific" 	>artist</a> /		<!-- last.fm images? -->
+					<a href="#orderby-code" 		class="specific code-specific" 		>lines of code</a> /
+					<a href="#orderby-content" 		class="specific text-specific" 		>content</a> /		<!-- retweet, text, mentions? -->
+					<a href="#orderby-length" 		class="specific text-specific" 		>length</a> /
+					<a href="#orderby-numbers"											>numbers</a>		<!-- outlines, storm?-->
+					<a href="#orderby-inspect"											>inspect</a>		<!-- inspect and click -->
+					<!--graphs : checkins per country, city ect.-->
+					<!--Bookmarks.-->
+					<!-- start view: faces/photos -->
+					
 <!--
 				by
 				<span> 
@@ -30,19 +48,6 @@
 					<a href="#display-timeline">numbers</a>
 				</span>
 -->
-				ordered by
-				<span> 
-					<a href="#orderby-date">date</a> /												<!-- X timeline -->
-					<a href="#orderby-time">time</a> 												<!-- X clock -->
-					<a href="#orderby-game" class="specific all-specific">type</a> /				<!-- pie charts-->
-					<a href="#orderby-location" class="specific location-specific">location</a> /	<!-- X map -->
-					<a href="#orderby-game" class="specific game-specific">game</a> /				<!-- like twitter client view--> 
-					<a href="#orderby-artist" class="specific music-specific" >artist</a> /			<!-- last.fm images? -->
-					<a href="#orderby-code" class="specific code-specific" >lines of code</a> /
-					<a href="#orderby-content" class="specific text-specific" >content</a> /		<!-- retweet, text, mentions? -->
-					<a href="#orderby-length" class="specific text-specific" >length</a> /
-					<a href="#orderby-timeline">numbers</a>											<!-- outlines, storm?-->
-					<a href="#orderby-timeline">inspect</a>											<!-- inspect and click -->
 				</span>
 			</nav>
 		</div>
@@ -62,10 +67,13 @@
 		<script src="javascript/targets/clock.js"></script>
 		<script src="javascript/targets/map.js"></script>
 		<script src="javascript/targets/symbol.js"></script>
+		<script src="javascript/targets/gametitles.js"></script>
 		<script src="javascript/animation/intro.js"></script>
 		<script src="javascript/animation/title.js"></script>		
 		<script src="javascript/navigation.js"></script>
-		<script src="javascript/navigation-item.js"></script>		
+		<script src="javascript/navigation-item.js"></script>
+		<script src="javascript/background-system.js"></script>
+		<script src="javascript/background-item.js"></script>		
 		<script src="javascript/label.js"></script>
 		<script src="javascript/main.js"></script>
 	</body>

@@ -14,6 +14,7 @@ $(document).ready(
 		var particle_system = new ParticleSystem();		
 		var event_system = new EventSystem();
 		var target_system = new TargetSystem();
+		var background_system = new BackgroundSystem();
 		
 		var SCREEN_UPDATED = new Signal();
 		
@@ -46,6 +47,10 @@ $(document).ready(
 			navigation.NAVIGATED.add( target_system.navigated );
 			navigation.NAVIGATED.add( particle_system.navigated );
 			navigation.NAVIGATED.add( event_system.navigated );
+			navigation.NAVIGATION_ITEMS_INITIALIZED.add( background_system.init );
+			
+			navigation.HOVERED.add( navigation.navigationItemsShow );
+			navigation.OUTED.add( navigation.navigationItemsHide );
 			
 			//navigation.HOVERED.add( particle_system.navigated );
 			//navigation.OUTED.add( event_system.navigated );
@@ -64,11 +69,16 @@ $(document).ready(
 			{
 				navigation.getNavigationItems()[i].CLICKED.add( navigation.navigate );
 				navigation.getNavigationItems()[i].HOVERED.add( target_system.hovered );
+				navigation.getNavigationItems()[i].HOVERED.add( background_system.backgroundAnimateIn );
 				navigation.getNavigationItems()[i].OUTED.add( target_system.outed );
+				navigation.getNavigationItems()[i].OUTED.add( background_system.backgroundAnimateOut );
+				navigation.getNavigationItems()[i].ANIMATED_IN.add( navigation.navigationItemsShow );
+				navigation.getNavigationItems()[i].ANIMATED_OUT.add( navigation.navigationItemsHide );
 			}
-			
+						
 			SCREEN_UPDATED.add( particle_system.screenUpdated );
 			SCREEN_UPDATED.add( target_system.screenUpdated );
+			SCREEN_UPDATED.add( background_system.screenUpdated );
 		}
 		
 		function resized()
@@ -76,6 +86,7 @@ $(document).ready(
 			var screen = { width: $( window ).width(), height: $( window ).height() };
 			
 			$( '#canvas' ).attr( screen );
+			$( '#text' ).css( { top: ( screen.height - $( '#text' ).height() ) / 2 } );
 			
 			SCREEN_UPDATED.dispatch( screen );
 		}
