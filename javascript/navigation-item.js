@@ -10,6 +10,8 @@ var NavigationItem = function( $dom_object )
 	_self.CLICKED = new Signal();
 	_self.HOVERED = new Signal();
 	_self.OUTED = new Signal();
+	_self.ANIMATED_IN = new Signal();
+	_self.ANIMATED_OUT = new Signal();
 	
 	(function(){ init( $dom_object ); })();
 		
@@ -23,6 +25,10 @@ var NavigationItem = function( $dom_object )
 		{
 			dom_object.hide();
 		}
+		
+		dom_object
+			.attr( { 'data-text': dom_object.text() } )
+			.text( '' );
 	}
 	
 	_self.getDomObject = function()
@@ -47,17 +53,112 @@ var NavigationItem = function( $dom_object )
 	// show specific nav items for target
 	_self.showSpecificFor = function( $target )
 	{		
+//		if (
+//			isSpecific( dom_object ) &&
+//			isSpecificFor( dom_object, $target )
+//		)
+//		{
+//			_self.activate();
+//		}
+//		
+//		else
+//		{
+//			_self.deactivate();
+//		}
+	}
+	
+	_self.animateText = function( $direction, $index )
+	{
+		if( $direction === true )
+		{
+			animateIn( $index );
+		}
+		
+		if( $direction === false )
+		{
+			animateOut( $index );
+		}
+	}
+	
+	_self.getID = function()
+	{
+		return dom_object.attr( 'href' ).replace( '#', '' );	
+	}
+	
+	function animateIn( $index, $text_displayed, $text_original )
+	{
 		if (
-			isSpecific( dom_object ) &&
-			isSpecificFor( dom_object, $target )
+			! $text_displayed &&
+			! $text_original
 		)
 		{
-			_self.activate();
+			$text_original = dom_object.attr( 'data-text' );
+			$text_displayed = '';
+		}
+		
+		if ( $text_displayed.length < $text_original.length )
+		{
+			$text_displayed += $text_original.charAt( $text_displayed.length );
+			
+			dom_object.text( $text_displayed );
+			
+			setTimeout( function(){ animateIn( $index, $text_displayed, $text_original ); }, 1 );
 		}
 		
 		else
 		{
-			_self.deactivate();
+			_self.ANIMATED_IN.dispatch( $index );
+		}
+	}
+	
+	function animateOut( $index, $text_displayed, $text_original )
+	{
+		if ( ! active )
+		{			
+			if (
+				! $text_displayed &&
+				! $text_original
+			)
+			{
+				if ( dom_object.attr( 'data-text' ) )
+				{
+					$text_original = dom_object.attr( 'data-text' );
+				}
+				
+				else
+				{
+					$text_original = dom_object.text();
+				}
+				
+				$text_displayed = $text_original;
+			}
+			
+			if ( $text_displayed.length > 0 )
+			{
+				$text_displayed = $text_displayed.substring( 0, $text_displayed.length - 1 );
+				
+				dom_object.text( $text_displayed );
+				
+				setTimeout( function(){ animateOut( $index, $text_displayed, $text_original ); }, 1 );
+			}
+			
+			else
+			{
+
+//				if ( ! dom_object.attr( 'data-text' ) )
+//				{
+//					dom_object.attr( { 'data-text': $text_original } );
+//				}
+				
+//				console.log( 'animated out: ' + dom_object.index() )
+				_self.ANIMATED_OUT.dispatch( $index );
+			}
+		}
+		
+		else
+		{
+//			console.log( 'active:' + dom_object.index() );
+			_self.ANIMATED_OUT.dispatch( $index );
 		}
 	}
 	

@@ -23,14 +23,12 @@ var Intro = function()
 				var paragraph = $( this ).text().split( '' );
 				text.push( paragraph );
 				
-				
-				
 				$( this ).text( '' );
 			}
 		);
 //_self.ANIMATED_IN.dispatch();
-console.log( text );
-		textWrite( 0, 0, text );	
+//console.log( text );
+		setTimeout( function(){ textWrite( 0, 0, text ); }, 1000 );
 	}
 	
 	function textWrite( $paragraph, $character, $text )
@@ -83,9 +81,9 @@ console.log( text );
 			
 			$('#text p:eq(' + $paragraph + ')' ).text( text_insert );
 			
-			if ( $('#text p:eq(' + $paragraph + ')' ).css('display') === 'none' )
+			if ( $('#text p:eq(' + $paragraph + ')' ).css( 'display' ) === 'none' )
 			{
-				$('#text p:eq(' + $paragraph + ')' ).fadeIn(100);
+				$('#text p:eq(' + $paragraph + ')' ).fadeIn( 100 );
 			}
 			
 			setTimeout( function() { textWrite( $paragraph, $character, $text ); }, timeout );
@@ -248,6 +246,11 @@ console.log( text );
 			if( recurse )
 			{
 				setTimeout( function() { titleAnimate( $index, $text, $current_text, $animated, $timeout ); }, $timeout );
+			}
+			
+			else
+			{
+				setTimeout( function(){ _self.ANIMATED_IN.dispatch(); }, 1000 );
 			}
 		}
 	}	

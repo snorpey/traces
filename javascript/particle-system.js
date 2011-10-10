@@ -134,7 +134,8 @@ var ParticleSystem = function()
 				var px = ~~ ( particles[i].getPosition().x + 0.5 );
 				var py = ~~ ( particles[i].getPosition().y + 0.5 );
 	
-				ctx.fillStyle = particles[i].getColor();
+				//ctx.fillStyle = particles[i].getColor();
+				ctx.fillStyle = '#ffffff';
 				ctx.beginPath();
 				ctx.arc( px, py, 1.5, 0, Math.PI * 2, true );
 				ctx.closePath();
