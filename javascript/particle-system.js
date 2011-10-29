@@ -11,6 +11,7 @@ var ParticleSystem = function()
 	var generator;
 	var filter = 'all';
 	var display = 'line';
+	var collision = false;
 			
 	var data_types = ['code', 'music', 'text', 'game', 'location', 'photo'];
 	
@@ -206,6 +207,19 @@ var ParticleSystem = function()
 			{
 				visible_particles[i].setTarget( $targets[i] );
 			}
+		}
+	}
+	
+	_self.setCollision = function( $collision )
+	{
+		if ( $collision )
+		{
+			collision = true;
+		}
+		
+		else
+		{
+			collision = false;
 		}
 	}
 	
