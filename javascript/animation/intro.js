@@ -27,7 +27,6 @@ var Intro = function()
 			}
 		);
 //_self.ANIMATED_IN.dispatch();
-//console.log( text );
 		setTimeout( function(){ textWrite( 0, 0, text ); }, 1000 );
 	}
 	

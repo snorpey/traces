@@ -16,6 +16,7 @@ var ParticleSystem = function()
 	var data_types = ['code', 'music', 'text', 'game', 'location', 'photo'];
 	
 	var _targets;
+	var _chaos = true;
 	
 	var Signal = signals.Signal;
 	
@@ -33,6 +34,11 @@ var ParticleSystem = function()
 	_self.screenUpdated = function( $screen )
 	{
 		screen = $screen;
+		
+		for ( var i = 0; i < particles.length; i++ )
+		{
+			particles[i].screenUpdated( $screen );
+		}
 	}
 	
 	_self.navigated = function( $target )
@@ -105,7 +111,7 @@ var ParticleSystem = function()
 		//ctx.fillRect(0, 0, screen.width, screen.height);
 		
 		
-		ctx.clearRect(0, 0, screen.width, screen.height);
+		ctx.clearRect( 0, 0, screen.width, screen.height );
 		
 		/*if ( map.getActive() )
 		{
@@ -196,12 +202,23 @@ var ParticleSystem = function()
 	{
 		var visible_particles = particlesGetVisible();
 		
-		if ( _targets !== $targets )
+		if ( $targets === 'chaos' )
 		{
-			_targets = $targets;
+			_chaos = true;
+			particlesExplode();
 		}
 		
-		for (  var i = 0; i < $targets.length; i++)
+		else
+		{
+			_chaos = false;
+			
+			if ( _targets !== $targets )
+			{
+				_targets = $targets;
+			}
+		}		
+		
+		for ( var i = 0; i < $targets.length; i++ )
 		{
 			if( visible_particles[i] )
 			{
@@ -238,6 +255,8 @@ var ParticleSystem = function()
 		//particles[index] = new Particle( particle_position, particle_index );
 		particles.push( new Particle( particle_position, particle_index ) );
 		
+		_self.screenUpdated( screen );
+		
 		_self.PARTICLES_UPDATED.dispatch( particlesGetVisible() );
 	}
 	
@@ -272,6 +291,16 @@ var ParticleSystem = function()
 		}
 		
 		return particles_active;
+	}
+	
+	// move all particles from center
+	_self.particlesExplode = function()
+	{
+		for ( var i = 0; i < particles.length; i++ )
+		{
+			particles[i].setTarget();
+			particles[i].explode();
+		}
 	}
 		
 	function filterEvents( $type )

@@ -17,7 +17,7 @@ var EventSystem = function()
 	{
 		event_generator = new EventGenerator();
 		
-		eventsGenerate( 100 );
+		eventsGenerate( 400 );
 	}
 	
 	_self.navigated = function( $target )

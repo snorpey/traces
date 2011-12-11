@@ -20,8 +20,6 @@ $(document).ready(
 		
 		$( window ).resize( resized );
 		
-		init();
-		
 		function init()
 		{		
 			var screen = { width: $( window ).width(), height: $( window ).height() };
@@ -51,6 +49,7 @@ $(document).ready(
 			
 			navigation.HOVERED.add( navigation.navigationItemsShow );
 			navigation.OUTED.add( navigation.navigationItemsHide );
+			navigation.OUTED.add( particle_system.particlesExplode );
 			
 			//navigation.HOVERED.add( particle_system.navigated );
 			//navigation.OUTED.add( event_system.navigated );
@@ -90,5 +89,7 @@ $(document).ready(
 			
 			SCREEN_UPDATED.dispatch( screen );
 		}
+		
+		init();
 	}
 );

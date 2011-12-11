@@ -35,46 +35,44 @@ var BackgroundItem = function( $id )
 	{
 		screen = $screen;
 		
-		console.log( screen );
+//		console.log( screen );
 		
 		dom_object
 			.css( screen )
 		
 		if ( dom_object.hasClass( 'active' ) )
 		{
-			dom_object.css( { left: 0 } );
+//			dom_object.css( { left: 0 } );
 		}
 		
 		else
 		{
-			dom_object.css( { left: screen.width } );
+//			dom_object.css( { left: screen.width } );
 		}
 			
 	}
 	
 	function backgroundAnimateIn()
 	{
-		dom_object
-			.css( { left: 0, opacity: 0.5 } )
-			.addClass( 'active' );
+//		dom_object
+//			.css( { left: 0, opacity: 0.5 } )
+//			.addClass( 'active' );
 	}
 	
 	function backgroundAnimateOut()
 	{
-		console.log( 'animateOut' );
-
 		dom_object
 			.css( { left: -screen.width, opacity: 0 } )
 		
-			setTimeout( 
-				function()
-				{
-					dom_object
-						.css( { left: screen.width, opacity: 0 } )
-						.removeClass( 'active' )		
-				},
-				600
-			);
+		setTimeout( 
+			function()
+			{
+				dom_object
+					.css( { left: screen.width, opacity: 0 } )
+					.removeClass( 'active' )		
+			},
+			600
+		);
 	}
 	
 	function getBackgroundById( $id )
