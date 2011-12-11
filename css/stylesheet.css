@@ -95,6 +95,10 @@ h1:hover
 nav
 {
 	display: none;
+	padding: 50px 50px 50px 0;
+	margin-top: -50px;
+	float: left;
+	clear: both;
 }
 
 a
@@ -107,19 +111,39 @@ a
 nav a
 {
 	padding: 2px 3px;
-	background-image: url(../images/nav.png);
-	background-repeat: no-repeat;
-	background-position: -240px 0;
 	
-	-webkit-transition: all 0.3s ease-in;
-	transition: all 0.3s ease-in;
+	/*-webkit-transition: all 0.2s ease-in;*/
+	transition: all 0.2s ease-in;
 }
+
+	nav h1
+	{
+		display: block;
+		float: left;
+		clear: both;
+	}
+
+	nav ul
+	{
+		display: block;
+		float: left;
+		clear: none;
+	}
+	
+	nav li
+	{
+		display: block;
+		float: left;
+		clear: none;
+	}
+	
+
 
 a:hover
 {
 	text-decoration: none;
 	color: rgba( 255, 255, 255, 1 );
-	background-position: 0 0;
+	background:red;
 }
 
 a.active

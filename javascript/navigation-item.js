@@ -1,3 +1,9 @@
+// nav item.
+
+//	X show defaults all the time
+//	- show specifics on hover
+// 	- hide specifics on out
+// 	- show specifics and default if parent selected
 var NavigationItem = function( $dom_object )
 {
 	var Signal = signals.Signal;
@@ -12,8 +18,6 @@ var NavigationItem = function( $dom_object )
 	_self.OUTED = new Signal();
 	_self.ANIMATED_IN = new Signal();
 	_self.ANIMATED_OUT = new Signal();
-	
-	(function(){ init( $dom_object ); })();
 		
 	function init( $dom_object )
 	{
@@ -26,9 +30,21 @@ var NavigationItem = function( $dom_object )
 			dom_object.hide();
 		}
 		
-		dom_object
-			.attr( { 'data-text': dom_object.text() } )
-			.text( '' );
+		
+		dom_object.attr( { 'data-text': dom_object.text() } )
+
+		if (
+			_self.getID() === 'filter-all' ||
+			_self.getID() === 'orderby-none'
+		)
+		{
+			_self.activate();
+		}
+		
+		else
+		{
+			dom_object.text( '' );
+		}
 	}
 	
 	_self.getDomObject = function()
@@ -50,21 +66,44 @@ var NavigationItem = function( $dom_object )
 		activeUpdate();
 	}
 	
+	// up the active status of this object
+	_self.checkTarget = function( $target )
+	{
+		
+		var navigation_keys = dom_object.attr( 'href' ).replace( '#', '' ).split( '-' );		
+		var return_value = false;
+						
+		if (
+			navigation_keys.length > 1 &&
+			$target.action === navigation_keys[0] &&
+			$target.value === navigation_keys[1]
+		)
+		{
+			_self.activate();
+		}
+		
+		else
+		{
+			_self.deactivate();
+		}
+	}
+	
+	
 	// show specific nav items for target
 	_self.showSpecificFor = function( $target )
 	{		
-//		if (
-//			isSpecific( dom_object ) &&
-//			isSpecificFor( dom_object, $target )
-//		)
-//		{
-//			_self.activate();
-//		}
-//		
-//		else
-//		{
-//			_self.deactivate();
-//		}
+		if (
+			isSpecific( dom_object ) &&
+			isSpecificFor( dom_object, $target )
+		)
+		{
+			_self.activate();
+		}
+		
+		else
+		{
+			_self.deactivate();
+		}
 	}
 	
 	_self.animateText = function( $direction, $index )
@@ -86,7 +125,9 @@ var NavigationItem = function( $dom_object )
 	}
 	
 	function animateIn( $index, $text_displayed, $text_original )
-	{
+	{		
+		dom_object.show();
+		
 		if (
 			! $text_displayed &&
 			! $text_original
@@ -95,7 +136,7 @@ var NavigationItem = function( $dom_object )
 			$text_original = dom_object.attr( 'data-text' );
 			$text_displayed = '';
 		}
-		
+				
 		if ( $text_displayed.length < $text_original.length )
 		{
 			$text_displayed += $text_original.charAt( $text_displayed.length );
@@ -113,6 +154,8 @@ var NavigationItem = function( $dom_object )
 	
 	function animateOut( $index, $text_displayed, $text_original )
 	{
+		var animated_out = false;
+		
 		if ( ! active )
 		{			
 			if (
@@ -150,18 +193,23 @@ var NavigationItem = function( $dom_object )
 //					dom_object.attr( { 'data-text': $text_original } );
 //				}
 				
-//				console.log( 'animated out: ' + dom_object.index() )
-				_self.ANIMATED_OUT.dispatch( $index );
+				$dom_object.hide();
+				animated_out = true;
 			}
 		}
 		
 		else
 		{
-//			console.log( 'active:' + dom_object.index() );
+			animated_out = true;			
+		}
+		
+		if ( animated_out )
+		{
+			
 			_self.ANIMATED_OUT.dispatch( $index );
 		}
 	}
-	
+		
 	function isSpecific( $dom_object )
 	{		
 		var return_value = false;
@@ -205,7 +253,7 @@ var NavigationItem = function( $dom_object )
 		return return_value;
 	}
 	
-	function activeUpdate()
+	function activeUpdate( $animate )
 	{
 		if ( dom_object )
 		{		
@@ -216,6 +264,11 @@ var NavigationItem = function( $dom_object )
 			{
 				dom_object.addClass( 'active' );
 				dom_object.show();
+				
+				//if ( $animate )
+				//{
+				//	animateIn();
+				//}
 			}
 			
 			if (
@@ -224,13 +277,19 @@ var NavigationItem = function( $dom_object )
 			)
 			{
 				dom_object.removeClass( 'active' );
-				dom_object.hide();
+				//dom_object.hide();
+				
+				//if ( $animate )
+				//{
+				//	animateOut();
+				//}
 			}
 		}
 	}
 	
 	function click( $event )
 	{
+		//$event.preventDefault();
 		_self.CLICKED.dispatch( getTarget( $event ) );
 	}
 	
@@ -243,4 +302,6 @@ var NavigationItem = function( $dom_object )
 	{
 		_self.OUTED.dispatch( getTarget( $event ) );
 	}
+	
+	(function(){ init( $dom_object ); })();
 }

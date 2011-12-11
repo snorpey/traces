@@ -17,6 +17,8 @@ var Particle = function( $position, $index )
 	var damping = 0.13;
 	var color = { r: 255, g: 255, b: 255, a: 1 };
 	
+	var screen = { width: 800, height: 600 };
+	
 	(function(){ init( $position, $index ); })();
 	
 	function init( $position, $index )
@@ -51,6 +53,11 @@ var Particle = function( $position, $index )
 	_self.removeTarget = function()
 	{
 		_self.setTarget();
+	}
+	
+	_self.screenUpdated = function( $screen )
+	{
+		screen = $screen;
 	}
 	
 	_self.getPosition = function()
@@ -98,8 +105,7 @@ var Particle = function( $position, $index )
 	}
 	
 	_self.update = function()
-	{		
-		
+	{
 		if ( has_target )
 		{						
 			if ( position.distanceFrom( Vector.create( [target.x, target.y, 0] ) ) > 0.2 )
@@ -117,8 +123,11 @@ var Particle = function( $position, $index )
 		
 		else
 		{
-			// YAAY. MOVE
+			is_moving = true;
+
 		}
+		
+		acceleration = acceleration.add( moveOnScreen( position, velocity, acceleration ) );			
 		
 		velocity = velocity.add( acceleration );
 		position = position.add( velocity );
@@ -127,19 +136,82 @@ var Particle = function( $position, $index )
 		//reset acceleration
 		acceleration.setElements( [0, 0, 0] );
 		
-		addDampening( 0.8 );
+		if ( has_target )
+		{
+			addDampening( 0.8 );
+		}
+		
 		fade();
 	}
 	
-	/*_self.updateFilter( $filter )
+	function moveOnScreen( $position, $velocity, $acceleration )
 	{
+		// cool shit...
+		// acceleration = acceleration.add( velocity.multiply( 1 ) );
+		var new_acceleration = $acceleration;
+		
+		if ( $velocity.modulus() < 1 && ! has_target )
+		{
+			new_acceleration = acceleration.add( $velocity.multiply( 1 + ( Math.random() * 10 ) ) );
+		}
+		
+		var new_position = $position.add( $velocity.add( new_acceleration ) );
+		var collided = false;
+		
 		if (
-			$filter  
+			new_position.elements[0] > screen.width &&
+			$velocity.elements[0] >= 0
+		)
+		{			
+			new_acceleration.setElements( [ $velocity.elements[0] * -1, new_acceleration.elements[1], new_acceleration.elements[2] ] );
+			collided = true;
+		}
+		
+		if (
+			new_position.elements[0] < 0 &&
+			$velocity.elements[0] <= 0
 		)
 		{
-			
+			new_acceleration.setElements( [ $velocity.elements[0] * -1, new_acceleration.elements[1], new_acceleration.elements[2] ] );
+			collided = true;
 		}
-	}*/
+		
+		if (
+			new_position.elements[1] > screen.height &&
+			$velocity.elements[1] >= 0
+		)
+		{
+			new_acceleration.setElements( [ new_acceleration.elements[0], $velocity.elements[1] * -1, new_acceleration.elements[2] ] );
+			collided = true;
+		}
+		
+		if (
+			new_position.elements[1] < 0 &&
+			$velocity.elements[1] <= 0
+		)
+		{
+			new_acceleration.setElements( [ new_acceleration.elements[0], $velocity.elements[1] * -1, new_acceleration.elements[2] ] );
+			collided = true;
+		}
+		
+		if ( collided )
+		{
+			if ( new_acceleration.modulus < 0.2 )
+			{
+				new_acceleration = new_acceleration.toUnitVector().multiply( 1.3 );
+			}
+			
+			else
+			{
+				// add dampening?
+				//new_acceleration = new_acceleration.multipl
+			}
+		}
+		
+//		console.log( new_acceleration.modulus() )
+		
+		return new_acceleration;		
+	}
 	
 	function draw()
 	{
@@ -150,6 +222,22 @@ var Particle = function( $position, $index )
 	function applyForce( $force )
 	{
 		acceleration = acceleration.add( $force );
+	}
+	
+	//_self.repelFrom(  )
+	
+	_self.explode = function()
+	{
+		var center = Vector.create( [screen.width / 2, screen.height / 2, 0] );
+		var direction = position.subtract( center ).toUnitVector();
+		var acceleration_new = acceleration.add( direction.multiply( ( Math.random() * 5 ) + 1 ) );
+
+		//console.log( 'EXPLODE', center, direction, acceleration, acceleration_new );
+
+		if ( acceleration_new.modulus() )
+		{
+			acceleration = acceleration.add( acceleration_new );
+		}
 	}
 	
 	function addDampening( $dampening )

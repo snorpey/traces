@@ -16,7 +16,6 @@ var Navigation = function()
 	function construct()
 	{
 		navigation_items = navigationItemsInit();
-		
 	}
 	
 	_self.init = function()
@@ -39,7 +38,8 @@ var Navigation = function()
 	{		
 		for ( var i = 0; i < navigation_items.length; i++ )
 		{
-			navigation_items[i].showSpecificFor( $target )
+			//navigation_items[i].showSpecificFor( $target );
+			navigation_items[i].checkTarget( $target );
 		}
 
 		_self.NAVIGATED.dispatch( $target );
@@ -54,7 +54,7 @@ var Navigation = function()
 	{
 		var items = [];
 		
-		$( 'nav a' ).each(
+		$( 'nav li a' ).each(
 			function()
 			{
 				items.push( new NavigationItem( $( this ) ) );
@@ -99,6 +99,7 @@ var Navigation = function()
 	
 	_self.navigationItemsHide = function( $index )
 	{		
+		//console.log( 'NAV CLOSE' );
 		if( animation_direction !== true )
 		{
 			if( $index === undefined )
@@ -113,7 +114,6 @@ var Navigation = function()
 				next_index >= 0
 			)
 			{
-//				console.log( 'hide ' + next_index );
 				navigation_items[next_index].animateText( false, next_index );
 			}
 		}
